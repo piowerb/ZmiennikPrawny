@@ -1,8 +1,34 @@
-# ZmiennikPrawny
+<div align="center">
+  <img src="src/imports/squircle_zmiennikprawny.png" width="200" alt="ZmiennikPrawny Logo" />
+  <h1>ZmiennikPrawny</h1>
+  <p>Aplikacja do monitorowania nowych ustaw z Dziennika Ustaw Rzeczypospolitej Polskiej w czasie rzeczywistym.</p>
 
-Aplikacja do monitorowania nowych ustaw z Dziennika Ustaw Rzeczypospolitej Polskiej w czasie rzeczywistym.
+  <img src="https://img.shields.io/badge/React-18-blue?logo=react" />
+  <img src="https://img.shields.io/badge/TypeScript-blue?logo=typescript" />
+  <img src="https://img.shields.io/badge/Tailwind-CSS-38bdf8?logo=tailwind-css" />
+  <img src="https://img.shields.io/badge/PWA-Ready-green" />
 
-![ZmiennikPrawny Logo](src/imports/squircle_zmiennikprawny.png)
+  <br><br>
+
+  <a href="https://zmiennikprawny.vercel.app/" target="_blank">
+    <img src="https://img.shields.io/badge/🌐-Zobacz_Live_Demo-brightgreen?style=for-the-badge" alt="Live Demo" />
+  </a>
+  
+  <br><br>
+
+  <img src="src/imports/screenshot.png" width="600" alt="Podgląd aplikacji" />
+</div>
+
+## 📋 Spis treści
+- [Historia Projektu](#-historia-projektu)
+- [Funkcje](#-funkcje)
+- [Technologie](#-technologie)
+- [Instalacja](#-instalacja)
+- [Struktura projektu](#-struktura-projektu)
+- [Optymalizacja iOS](#-optymalizacja-dla-iosiphone)
+- [Licencja](#-licencja-i-prawa-autorskie)
+
+---
 
 ## Historia Projektu
 * **Wrzesień 2025 (Alfa):** Początek prac rozwojowych, wewnętrzna faza testów i budowanie fundamentów aplikacji.
@@ -234,3 +260,5 @@ Aplikacja stworzona w celu monitorowania polskiego prawa w przystępny i nowocze
 ---
 
 **ZmiennikPrawny** - Bądź na bieżąco z prawem! 📚⚖️
+
+[↑ Wróć na górę](#-spis-treści)
