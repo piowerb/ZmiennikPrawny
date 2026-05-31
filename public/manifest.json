@@ -1,0 +1,18 @@
+{
+  "name": "ZmiennikPrawny",
+  "short_name": "ZmiennikPrawny",
+  "description": "Monitorowanie nowych ustaw z Dziennika Ustaw RP w czasie rzeczywistym",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#005130",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "/src/imports/squircle_zmiennikprawny.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
