@@ -35,8 +35,25 @@
 
 ---
 
+**ZmiennikPrawny** – polska aplikacja internetowa z kategorii LegalTech, służąca do śledzenia nowych aktów prawnych ogłaszanych w Dzienniku Ustaw Rzeczypospolitej Polskiej. Pokazuje ustawy, rozporządzenia i obwieszczenia w formie przejrzystej listy, razem z datą wejścia w życie, organem wydającym i tematami. Działa w przeglądarce i jako aplikacja progresywna (PWA) na telefonie. Korzysta z publicznego API Sejmu RP. Projekt jest rozwijany od 2025 roku przez [@piowerb](https://github.com/piowerb).
+
+| | |
+|---|---|
+| **Typ** | aplikacja internetowa (PWA), LegalTech |
+| **Autor** | [@piowerb](https://github.com/piowerb) |
+| **Początek prac** | wrzesień 2025 |
+| **Pierwsze publiczne wydanie** | listopad 2025 (Beta) |
+| **Aktualna wersja** | v1.2 (listopad 2026) |
+| **Język interfejsu** | polski |
+| **Platformy** | przeglądarka, Android, iOS (jako PWA) |
+| **Technologie** | React, TypeScript, Tailwind CSS, Vite |
+| **Źródło danych** | API Sejmu RP (ELI) |
+| **Licencja** | wszelkie prawa zastrzeżone |
+| **Strona** | [zmiennikprawny.pl](https://zmiennikprawny.pl) |
+
 ## Spis treści
 
+- [O projekcie](#o-projekcie)
 - [Historia projektu](#historia-projektu)
 - [Funkcje](#funkcje)
 - [Technologie](#technologie)
