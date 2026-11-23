@@ -1,281 +1,168 @@
 <div align="center">
-  <img src="src/imports/squircle_zmiennikprawny.png" width="200" alt="ZmiennikPrawny Logo" />
+  <img src="src/imports/squircle_zmiennikprawny.png" width="160" alt="Logo ZmiennikPrawny" />
   <h1>ZmiennikPrawny</h1>
-  <p>Aplikacja do monitorowania nowych ustaw z Dziennika Ustaw Rzeczypospolitej Polskiej w czasie rzeczywistym.</p>
+  <p>Nowe ustawy, rozporządzenia i obwieszczenia z Dziennika Ustaw RP w jednym miejscu, zaraz po publikacji.</p>
 
-  <img src="https://img.shields.io/badge/React-18-blue?logo=react" />
-  <img src="https://img.shields.io/badge/TypeScript-blue?logo=typescript" />
-  <img src="https://img.shields.io/badge/Tailwind-CSS-38bdf8?logo=tailwind-css" />
-  <img src="https://img.shields.io/badge/PWA-Ready-green" />
+  <p>
+    <img alt="React 18" src="https://img.shields.io/badge/React-18-61DAFB?style=flat-square&logo=react&logoColor=black" />
+    <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white" />
+    <img alt="Tailwind CSS v4" src="https://img.shields.io/badge/Tailwind_CSS-v4-38BDF8?style=flat-square&logo=tailwindcss&logoColor=white" />
+    <img alt="Vite" src="https://img.shields.io/badge/Vite-6-646CFF?style=flat-square&logo=vite&logoColor=white" />
+    <img alt="PWA" src="https://img.shields.io/badge/PWA-gotowe-005130?style=flat-square&logo=pwa&logoColor=white" />
+    <img alt="Vercel" src="https://img.shields.io/badge/hosting-Vercel-000000?style=flat-square&logo=vercel&logoColor=white" />
+    <br />
+    <img alt="Dane: API Sejmu RP" src="https://img.shields.io/badge/dane-API_Sejmu_RP_(ELI)-005130?style=flat-square" />
+    <img alt="Bez kont i ciasteczek" src="https://img.shields.io/badge/konta_i_ciasteczka-brak-005130?style=flat-square" />
+    <img alt="Ostatnia zmiana" src="https://img.shields.io/github/last-commit/piowerb/ZmiennikPrawny?style=flat-square&label=ostatnia%20zmiana" />
+  </p>
 
-  <br><br>
+  <p>
+    <a href="https://zmiennikprawny.vercel.app/"><img alt="Otwórz aplikację" src="https://img.shields.io/badge/Otwórz_aplikację-005130?style=for-the-badge" /></a>
+    &nbsp;
+    <a href="https://zmiennikprawny.pl"><img alt="Strona projektu" src="https://img.shields.io/badge/zmiennikprawny.pl-ffffff?style=for-the-badge&labelColor=ffffff&color=e6f4ed" /></a>
+  </p>
 
-  <a href="https://zmiennikprawny.vercel.app/" target="_blank">
-    <img src="https://img.shields.io/badge/🌐-Zobacz_Live_Demo-brightgreen?style=for-the-badge" alt="Live Demo" />
-  </a>
-  
-  <br><br>
-
-  <img src="src/imports/screenshot.png" width="600" alt="Podgląd aplikacji" />
+  <img src="src/imports/screenshot.png" width="640" alt="Podgląd aplikacji ZmiennikPrawny" />
 </div>
-
-## 📋 Spis treści
-- [Historia Projektu](#-historia-projektu)
-- [Funkcje](#-funkcje)
-- [Technologie](#-technologie)
-- [Instalacja](#-instalacja)
-- [Struktura projektu](#-struktura-projektu)
-- [Optymalizacja iOS](#-optymalizacja-dla-iosiphone)
-- [Licencja](#-licencja-i-prawa-autorskie)
 
 ---
 
-## Historia Projektu
-* **Wrzesień 2025 (Alfa):** Początek prac rozwojowych, wewnętrzna faza testów i budowanie fundamentów aplikacji.
-* **Listopad 2025 (Beta):** Pierwsza publicznie dostępna wersja aplikacji. Otwarcie na opinie użytkowników i pierwsze szersze testy w środowisku produkcyjnym.
-* **Maj 2026 (Stabilna v1.0):** Premiera pierwszej wersji stabilnej. Wprowadzenie pełnego, dopracowanego interfejsu (GUI), optymalizacja UX oraz wdrożenie wszystkich niezbędnych funkcji.
-* **Listopad 2026 (v1.1):** Aktualizacja stabilności i danych. Naprawa wyszukiwarki, data wejścia w życie, organ wydający i słowa kluczowe z ISAP, pełne wsparcie PWA, ok. 4× mniej pobieranych danych.
-* **Listopad 2026 (v1.2):** Zakładki „Wkrótce” i „Obserwowane”, grupowanie aktów po dniach, linki do pojedynczych aktów, klikalne tematy i organy, tryb ciemny.
+## Spis treści
+
+- [Historia projektu](#historia-projektu)
+- [Funkcje](#funkcje)
+- [Technologie](#technologie)
+- [Uruchomienie lokalne](#uruchomienie-lokalne)
+- [Struktura projektu](#struktura-projektu)
+- [Źródło danych (API Sejmu RP)](#źródło-danych-api-sejmu-rp)
+- [iPhone i PWA](#iphone-i-pwa)
+- [Licencja i prawa autorskie](#licencja-i-prawa-autorskie)
+
+## Historia projektu
+
+| Data | Wersja | Co się zmieniło |
+|---|---|---|
+| wrzesień 2025 | Alfa | Początek prac, wewnętrzne testy i fundamenty aplikacji |
+| listopad 2025 | Beta | Pierwsza publiczna wersja, pierwsze opinie użytkowników |
+| maj 2026 | v1.0 | Pierwsza wersja stabilna: dopracowany interfejs i UX |
+| listopad 2026 | v1.1 | Naprawa wyszukiwarki, data wejścia w życie, organ wydający i słowa kluczowe z ISAP, pełne PWA, ok. 4× mniej pobieranych danych |
+| listopad 2026 | v1.2 | Zakładki „Wkrótce” i „Obserwowane”, grupowanie po dniach, linki do aktów, klikalne tematy i organy, ikonki tematów, tryb ciemny |
 
 ## Funkcje
 
-✅ **Monitorowanie w czasie rzeczywistym** - Pobieranie aktów prawnych z ISAP  
-✅ **Inteligentne wyszukiwanie** - Szybkie filtrowanie po tytule z dynamicznym podświetlaniem (highlighting) trafionych fraz na zielono  
-✅ **Kategorie** - Ustawy, rozporządzenia, ogłoszenia  
-✅ **Szczegóły** - Pełne metadane aktu  
-✅ **PDF** - Bezpośredni link do oficjalnego dokumentu  
-✅ **Mobilne** - Responsywne, safe areas dla iOS oraz natywne wsparcie dla favicon w formacie PNG  
-✅ **Wkrótce w życie** - Akty, które zaczną obowiązywać w ciągu 14 dni, pogrupowane według daty wejścia w życie  
-✅ **Obserwowane tematy** - Własna lista słów (zapis w przeglądarce, bez konta) z oznaczeniem nowych aktów od ostatniej wizyty  
-✅ **Linki do aktów** - Każdy akt ma własny adres (np. `/#/DU/2026/1539`), działa przycisk „wstecz”  
-✅ **Klikalne tematy i organy** - Jedno kliknięcie pokazuje wszystkie akty z danym tematem lub od danego organu  
-✅ **Tryb ciemny** - Automatycznie według ustawień systemu albo ręcznie  
+- **Najnowsze akty** – ustawy, rozporządzenia i obwieszczenia z ostatnich 30 dni, pogrupowane według dnia publikacji
+- **Wyszukiwarka** – szuka w tytule, sygnaturze, organie i tematach; trafione frazy są podświetlone
+- **Filtry** – Wszystkie / Ustawy / Rozporządzenia / Obwieszczenia
+- **Wkrótce w życie** – akty, które zaczną obowiązywać w ciągu 14 dni, z odliczaniem dni
+- **Obserwowane tematy** – własna lista słów (zapisana tylko w przeglądarce, bez konta) z oznaczeniem nowych aktów od ostatniej wizyty
+- **Klikalne tematy i organy** – jedno kliknięcie pokazuje wszystkie akty z danym tematem albo od danego organu; każdy temat ma swoją ikonkę
+- **Szczegóły aktu** – sygnatura, data publikacji i wejścia w życie, organ, tematy, link do PDF i do strony w ISAP, kopiowanie sygnatury i linku
+- **Linki do aktów** – każdy akt ma własny adres (np. `/#/DU/2026/1539`), działa przycisk „wstecz”
+- **Tryb ciemny** – automatycznie według systemu albo ręcznie
+- **PWA** – instalacja na ekranie głównym telefonu, dopasowanie do notcha i Dynamic Island
 
 ## Technologie
 
-- **React 18** + TypeScript
-- **Tailwind CSS v4** - Nowoczesny styling
-- **Vite** - Szybkie budowanie i hot reload
-- **Lucide React** - Ikony wektorowe
-- **ISAP API** - Oficjalne API Dziennika Ustaw
+| | |
+|---|---|
+| Interfejs | React 18 + TypeScript |
+| Style | Tailwind CSS v4 |
+| Budowanie | Vite 6 |
+| Ikony | Lucide React |
+| Dane | API Sejmu RP (ELI) |
+| Hosting | Vercel |
 
-## Wymagania
+## Uruchomienie lokalne
 
-- **Node.js** w wersji 18 lub wyższej
-- **pnpm** (menedżer pakietów)
-
-## Instalacja
-
-### 1. Sklonuj repozytorium
+Wymagania: **Node.js 18+** i **pnpm**.
 
 ```bash
-git clone <url-repozytorium>
-cd code
-
-```
-
-### 2. Zainstaluj zależności
-
-```bash
-# Jeśli nie masz pnpm, zainstaluj globalnie:
-npm install -g pnpm
-
-# Zainstaluj zależności projektu:
+git clone https://github.com/piowerb/ZmiennikPrawny.git
+cd ZmiennikPrawny
 pnpm install
-
-```
-
-### 3. Uruchom aplikację w trybie deweloperskim
-
-```bash
-
-# Jeśli uruchamiasz lokalnie:
 pnpm run dev
-
 ```
 
-Aplikacja będzie dostępna pod adresem: `http://localhost:5173`
+Aplikacja będzie dostępna pod adresem `http://localhost:5173`.
 
-## Budowanie dla produkcji
-
-Jeśli budujesz lokalnie:
+Wersja produkcyjna:
 
 ```bash
 pnpm run build
-
 ```
 
-Zbudowana aplikacja znajdzie się w folderze `dist/`.
+Zbudowane pliki trafią do folderu `dist/`.
 
 ## Struktura projektu
-
-**Minimalistyczna architektura - tylko niezbędne pliki:**
 
 ```text
 src/
 ├── app/
+│   ├── App.tsx                 # układ, zakładki, filtry, routing (#/DU/rok/pozycja)
+│   ├── components/
+│   │   ├── ActList.tsx         # lista aktów pogrupowana po dniach
+│   │   ├── ActDetail.tsx       # szczegóły aktu
+│   │   ├── TopicsPanel.tsx     # obserwowane tematy
+│   │   └── ui/                 # komponenty shadcn/ui
+│   ├── lib/
+│   │   ├── text.tsx            # daty, kategorie, wyszukiwanie, podświetlanie
+│   │   ├── topicIcon.tsx       # ikonki tematów
+│   │   └── storage.ts          # zapis ustawień w przeglądarce
 │   ├── services/
-│   │   └── isapService.ts   # API (70 linii)
-│   ├── types/
-│   │   └── LegalAct.ts      # Typy (15 linii)
-│   └── App.tsx              # Cała aplikacja (~410 linii)
-├── imports/
-│   └── squircle_zmiennikprawny.png
-└── styles/
-    └── theme.css            # Minimalne style (10 linii)
-
+│   │   └── isapService.ts      # pobieranie danych z API Sejmu
+│   └── types/
+│       └── LegalAct.ts         # typ aktu prawnego
+├── imports/                    # logo i zrzut ekranu
+└── styles/                     # Tailwind i motyw
+public/                         # manifest PWA i ikony
 ```
 
-> 📖 Zobacz [SIMPLE.md](https://www.google.com/search?q=./SIMPLE.md) dla szczegółów o architekturze minimalistycznej
+## Źródło danych (API Sejmu RP)
 
-## Jak korzystać z aplikacji
+Aplikacja korzysta z publicznego API Sejmu RP w standardzie ELI (European Legislation Identifier).
 
-### 1. Przeglądanie aktów prawnych
+- Zapytanie używane w aplikacji: `https://api.sejm.gov.pl/eli/acts/search?publisher=DU&pubDateFrom={data}` – akty z ostatnich 30 dni, razem z datą wejścia w życie, organem wydającym i słowami kluczowymi
+- PDF aktu: `https://isap.sejm.gov.pl/isap.nsf/download.xsp/WDU{rok}{pozycja}/O/D{rok}{pozycja}.pdf`
+- Dokumentacja: [api.sejm.gov.pl/eli_pl.html](https://api.sejm.gov.pl/eli_pl.html)
+- Portal ISAP: [isap.sejm.gov.pl](https://isap.sejm.gov.pl/)
 
-Na głównym ekranie zobaczysz listę najnowszych aktów prawnych z Dziennika Ustaw. Akty są automatycznie pobierane z oficjalnego API ISAP.
-
-### 2. Wyszukiwanie
-
-Użyj paska wyszukiwania na górze ekranu, aby szybko znaleźć interesujące Cię akty. Wpisana fraza zostanie automatycznie podświetlona na zielono w wynikach wyszukiwania.
-
-### 3. Filtrowanie
-
-Użyj przycisków filtrów, aby wyświetlić tylko:
-
-* Ustawy
-* Rozporządzenia
-* Ogłoszenia
-
-### 4. Szczegóły aktu
-
-Kliknij na dowolny akt, aby zobaczyć:
-
-* Pełny tytuł i opis
-* Datę ogłoszenia i wejścia w życie
-* Organ wydający
-* Tagi tematyczne
-* Możliwość pobrania PDF
-
-## API - Dziennik Ustaw (ISAP)
-
-Aplikacja korzysta z oficjalnego API Internetowego Systemu Aktów Prawnych prowadzonego przez Sejm RP:
-
-* **Base URL**: `https://api.sejm.gov.pl/eli/acts`
-* **Endpoint używany w aplikacji**: `https://api.sejm.gov.pl/eli/acts/search?publisher=DU&pubDateFrom={data}` (akty z ostatnich 30 dni, z datą wejścia w życie, organem i słowami kluczowymi)
-* **Endpoint dla Dziennika Ustaw**: `https://api.sejm.gov.pl/eli/acts/DU/{year}`
-* **Dokumentacja API**: [https://api.sejm.gov.pl/](https://www.google.com/search?q=https://api.sejm.gov.pl/)
-* **Dokumentacja ELI**: [https://api.sejm.gov.pl/eli_pl.html](https://www.google.com/search?q=https://api.sejm.gov.pl/eli_pl.html)
-* **Portal ISAP**: [https://isap.sejm.gov.pl/](https://www.google.com/search?q=https://isap.sejm.gov.pl/)
-
-### Jak działa API
-
-API zwraca dane w formacie JSON zawierające:
-
-* Tytuł aktu prawnego
-* Rok i pozycję w dzienniku
-* Datę ogłoszenia i publikacji
-* Datę wejścia w życie
-* Status aktu
-* Linki do pełnych tekstów (PDF/HTML)
-
-Przykładowe zapytanie:
+Przykład:
 
 ```bash
-curl [https://api.sejm.gov.pl/eli/acts/DU/2026?limit=10](https://api.sejm.gov.pl/eli/acts/DU/2026?limit=10)
-
+curl "https://api.sejm.gov.pl/eli/acts/DU/2026/1539"
 ```
 
-### Zakres danych
+Akty normatywne i urzędowe dokumenty nie są przedmiotem prawa autorskiego (art. 4 ustawy o prawie autorskim i prawach pokrewnych). ZmiennikPrawny nie jest serwisem Sejmu RP ani Rządowego Centrum Legislacji, a informacje w aplikacji nie stanowią porady prawnej. Wiążący jest wyłącznie tekst opublikowany w Dzienniku Ustaw.
 
-Baza danych zawiera akty prawne od 1918 roku do chwili obecnej (ponad 96,000 aktów). Aplikacja automatycznie pobiera najnowsze akty z bieżącego i poprzedniego roku.
-Dane są pobierane w czasie rzeczywistym bezpośrednio z oficjalnych źródeł.
+## iPhone i PWA
 
-## Optymalizacja dla iOS/iPhone
+Aplikacja działa w przeglądarce, ale można ją też dodać do ekranu głównego jak zwykłą aplikację:
 
-Aplikacja została w pełni zoptymalizowana pod urządzenia iOS:
+1. Otwórz [zmiennikprawny.vercel.app](https://zmiennikprawny.vercel.app/) w Safari
+2. Stuknij „Udostępnij” (kwadrat ze strzałką)
+3. Wybierz „Dodaj do ekranu początkowego”
 
-### ✅ Safe Areas
+Interfejs uwzględnia notch i Dynamic Island (safe areas), ma przyciski o rozmiarze min. 44×44 px i własną ikonę na ekranie głównym.
 
-* Automatyczne dopasowanie do notch/Dynamic Island
-* Bezpieczne obszary dla dolnej nawigacji
-* Wsparcie dla wszystkich rozmiarów iPhone
+## Licencja i prawa autorskie
 
-### ✅ Touch Targets
+**Wszelkie prawa zastrzeżone (All Rights Reserved).**
 
-* Wszystkie przyciski mają minimum 44x44px (standard iOS)
-* Większe obszary klikalne dla lepszej ergonomii
-* Optymalne odstępy między elementami
+Kod źródłowy, projekt interfejsu i architektura aplikacji ZmiennikPrawny są moją wyłączną własnością.
 
-### ✅ iOS UX Patterns
+- Możesz przeglądać ten kod wyłącznie w celach edukacyjnych i poglądowych.
+- **Zabronione jest** kopiowanie, modyfikowanie, rozpowszechnianie i wykorzystywanie tego kodu (w całości lub we fragmentach) we własnych projektach, komercyjnych i niekomercyjnych, bez mojej wcześniejszej, wyraźnej zgody.
 
-* Płynne animacje i przejścia
-* iOS-style toggle switches
-* Zaokrąglone rogi (border-radius zgodny z iOS)
-* Smooth scrolling z `-webkit-overflow-scrolling`
-
-### ✅ Typography
-
-* Font size minimum 16px (zapobiega auto-zoom w iOS)
-* Czytelne fonty i odpowiednie wagi
-* Optymalne line-height dla czytelności
-
-### ✅ PWA Support
-
-* Manifest.json dla "Add to Home Screen"
-* Theme color: #005130 (zielony motyw)
-* Standalone mode - pełnoekranowa aplikacja
-* Własna ikona widoczna na ekranie głównym i w kartach przeglądarki
-
-### 📱 Instalacja jako PWA na iPhone
-
-1. Otwórz aplikację w Safari
-2. Kliknij ikonę "Udostępnij" (kwadrat ze strzałką)
-3. Wybierz "Dodaj do ekranu początkowego"
-4. Aplikacja pojawi się jako ikona na ekranie głównym
-5. Uruchom jak natywną aplikację!
-
-### Jak dodać nową funkcję
-
-1. Utwórz nowy branch: `git checkout -b feature/nazwa-funkcji`
-2. Wprowadź zmiany
-3. Przetestuj lokalnie
-4. Utwórz Pull Request
-
-## Wsparcie
-
-W razie problemów lub pytań:
-
-* Zgłoś issue na GitHubie
-* Sprawdź dokumentację API: https://api.sejm.gov.pl/
-
-## Licencja i Prawa Autorskie
-
-**Wszelkie prawa zastrzeżone (All Rights Reserved)**
-
-Kod źródłowy, projekt interfejsu oraz cała architektura aplikacji ZmiennikPrawny są moją wyłączną własnością.
-
-* Masz prawo przeglądać ten kod (np. w repozytorium na GitHubie) wyłącznie w celach edukacyjnych i poglądowych.
-* **Kategorycznie zabrania się** kopiowania, modyfikowania, dystrybuowania oraz wykorzystywania tego kodu (w całości lub w jakichkolwiek fragmentach) we własnych projektach komercyjnych i niekomercyjnych bez uzyskania mojej uprzedniej, wyraźnej zgody.
-
-Jeśli chcesz użyć tego projektu, zmodyfikować go, rozwinąć lub wdrożyć do własnych celów – **musisz najpierw skontaktować się ze mną**, aby uzyskać na to pozwolenie.
-
+Jeśli chcesz użyć tego projektu, rozwinąć go albo wdrożyć u siebie, najpierw się ze mną skontaktuj. Błędy i pomysły możesz zgłaszać w zakładce [Issues](https://github.com/piowerb/ZmiennikPrawny/issues).
 
 ### Licencje komponentów zewnętrznych
 
 Prawa zastrzeżone dotyczą mojego kodu i projektu aplikacji. Projekt korzysta też z bibliotek open source na ich własnych licencjach, m.in. React (MIT), Radix UI (MIT), komponenty shadcn/ui (MIT), Tailwind CSS (MIT) i ikony Lucide (ISC). Ich prawa należą do autorów tych bibliotek.
 
-### Źródło danych
-
-Dane pochodzą z publicznego API Sejmu RP (ELI, https://api.sejm.gov.pl). Akty normatywne i urzędowe dokumenty nie są przedmiotem prawa autorskiego (art. 4 ustawy o prawie autorskim i prawach pokrewnych). ZmiennikPrawny nie jest serwisem Sejmu RP; wiążący jest wyłącznie tekst opublikowany w Dzienniku Ustaw.
-
-## Autor
-
-**Autor:** [@piowerb](https://github.com/piowerb)
-
-Aplikacja stworzona w celu monitorowania polskiego prawa w przystępny i nowoczesny sposób.
-
 ---
 
-**ZmiennikPrawny** - Bądź na bieżąco z prawem! 📚⚖️
-
-[↑ Wróć na górę](#-spis-treści)
+<p align="center">
+  Autor: <a href="https://github.com/piowerb">@piowerb</a> · <b>ZmiennikPrawny – bądź na bieżąco z prawem</b> ⚖️
+  <br />
+  <a href="#zmiennikprawny">↑ Wróć na górę</a>
+</p>
