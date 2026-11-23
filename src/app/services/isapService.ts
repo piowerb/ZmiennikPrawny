@@ -102,3 +102,10 @@ export async function fetchRecentLegalActs(): Promise<LegalAct[]> {
       return diff !== 0 ? diff : b.position - a.position;
     });
 }
+
+/** Pojedynczy akt po adresie ELI, np. "DU/2026/1539" (dla linków do starszych aktów). */
+export async function fetchActByEli(eli: string): Promise<LegalAct> {
+  const res = await fetch(`${API}/${eli}`);
+  if (!res.ok) throw new Error(`API Sejmu: HTTP ${res.status}`);
+  return convert(await res.json());
+}

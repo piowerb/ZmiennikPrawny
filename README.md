@@ -34,6 +34,8 @@
 * **Wrzesień 2025 (Alfa):** Początek prac rozwojowych, wewnętrzna faza testów i budowanie fundamentów aplikacji.
 * **Listopad 2025 (Beta):** Pierwsza publicznie dostępna wersja aplikacji. Otwarcie na opinie użytkowników i pierwsze szersze testy w środowisku produkcyjnym.
 * **Maj 2026 (Stabilna v1.0):** Premiera pierwszej wersji stabilnej. Wprowadzenie pełnego, dopracowanego interfejsu (GUI), optymalizacja UX oraz wdrożenie wszystkich niezbędnych funkcji.
+* **Listopad 2026 (v1.1):** Aktualizacja stabilności i danych. Naprawa wyszukiwarki, data wejścia w życie, organ wydający i słowa kluczowe z ISAP, pełne wsparcie PWA, ok. 4× mniej pobieranych danych.
+* **Listopad 2026 (v1.2):** Zakładki „Wkrótce” i „Obserwowane”, grupowanie aktów po dniach, linki do pojedynczych aktów, klikalne tematy i organy, tryb ciemny.
 
 ## Funkcje
 
@@ -43,6 +45,11 @@
 ✅ **Szczegóły** - Pełne metadane aktu  
 ✅ **PDF** - Bezpośredni link do oficjalnego dokumentu  
 ✅ **Mobilne** - Responsywne, safe areas dla iOS oraz natywne wsparcie dla favicon w formacie PNG  
+✅ **Wkrótce w życie** - Akty, które zaczną obowiązywać w ciągu 14 dni, pogrupowane według daty wejścia w życie  
+✅ **Obserwowane tematy** - Własna lista słów (zapis w przeglądarce, bez konta) z oznaczeniem nowych aktów od ostatniej wizyty  
+✅ **Linki do aktów** - Każdy akt ma własny adres (np. `/#/DU/2026/1539`), działa przycisk „wstecz”  
+✅ **Klikalne tematy i organy** - Jedno kliknięcie pokazuje wszystkie akty z danym tematem lub od danego organu  
+✅ **Tryb ciemny** - Automatycznie według ustawień systemu albo ręcznie  
 
 ## Technologie
 
@@ -154,6 +161,7 @@ Kliknij na dowolny akt, aby zobaczyć:
 Aplikacja korzysta z oficjalnego API Internetowego Systemu Aktów Prawnych prowadzonego przez Sejm RP:
 
 * **Base URL**: `https://api.sejm.gov.pl/eli/acts`
+* **Endpoint używany w aplikacji**: `https://api.sejm.gov.pl/eli/acts/search?publisher=DU&pubDateFrom={data}` (akty z ostatnich 30 dni, z datą wejścia w życie, organem i słowami kluczowymi)
 * **Endpoint dla Dziennika Ustaw**: `https://api.sejm.gov.pl/eli/acts/DU/{year}`
 * **Dokumentacja API**: [https://api.sejm.gov.pl/](https://www.google.com/search?q=https://api.sejm.gov.pl/)
 * **Dokumentacja ELI**: [https://api.sejm.gov.pl/eli_pl.html](https://www.google.com/search?q=https://api.sejm.gov.pl/eli_pl.html)
@@ -250,6 +258,15 @@ Kod źródłowy, projekt interfejsu oraz cała architektura aplikacji ZmiennikPr
 * **Kategorycznie zabrania się** kopiowania, modyfikowania, dystrybuowania oraz wykorzystywania tego kodu (w całości lub w jakichkolwiek fragmentach) we własnych projektach komercyjnych i niekomercyjnych bez uzyskania mojej uprzedniej, wyraźnej zgody.
 
 Jeśli chcesz użyć tego projektu, zmodyfikować go, rozwinąć lub wdrożyć do własnych celów – **musisz najpierw skontaktować się ze mną**, aby uzyskać na to pozwolenie.
+
+
+### Licencje komponentów zewnętrznych
+
+Prawa zastrzeżone dotyczą mojego kodu i projektu aplikacji. Projekt korzysta też z bibliotek open source na ich własnych licencjach, m.in. React (MIT), Radix UI (MIT), komponenty shadcn/ui (MIT), Tailwind CSS (MIT) i ikony Lucide (ISC). Ich prawa należą do autorów tych bibliotek.
+
+### Źródło danych
+
+Dane pochodzą z publicznego API Sejmu RP (ELI, https://api.sejm.gov.pl). Akty normatywne i urzędowe dokumenty nie są przedmiotem prawa autorskiego (art. 4 ustawy o prawie autorskim i prawach pokrewnych). ZmiennikPrawny nie jest serwisem Sejmu RP; wiążący jest wyłącznie tekst opublikowany w Dzienniku Ustaw.
 
 ## Autor
 
