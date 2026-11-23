@@ -22,7 +22,15 @@
     <a href="https://zmiennikprawny.pl"><img alt="Strona projektu" src="https://img.shields.io/badge/zmiennikprawny.pl-ffffff?style=for-the-badge&labelColor=ffffff&color=e6f4ed" /></a>
   </p>
 
-  <img src="src/imports/screenshot.png" width="640" alt="Podgląd aplikacji ZmiennikPrawny" />
+  <img src="src/imports/screenshot.png" width="720" alt="ZmiennikPrawny na komputerze – lista najnowszych aktów" />
+
+  <br /><br />
+
+  <img src="docs/screenshot-mobile-list.png" width="230" alt="ZmiennikPrawny na telefonie – lista aktów" />
+  &nbsp;
+  <img src="docs/screenshot-mobile-detail.png" width="230" alt="ZmiennikPrawny na telefonie – szczegóły aktu" />
+  &nbsp;
+  <img src="docs/screenshot-mobile-dark.png" width="230" alt="ZmiennikPrawny na telefonie – tryb ciemny" />
 </div>
 
 ---
@@ -45,8 +53,7 @@
 | wrzesień 2025 | Alfa | Początek prac, wewnętrzne testy i fundamenty aplikacji |
 | listopad 2025 | Beta | Pierwsza publiczna wersja, pierwsze opinie użytkowników |
 | maj 2026 | v1.0 | Pierwsza wersja stabilna: dopracowany interfejs i UX |
-| listopad 2026 | v1.1 | Naprawa wyszukiwarki, data wejścia w życie, organ wydający i słowa kluczowe z ISAP, pełne PWA, ok. 4× mniej pobieranych danych |
-| listopad 2026 | v1.2 | Zakładki „Wkrótce” i „Obserwowane”, grupowanie po dniach, linki do aktów, klikalne tematy i organy, ikonki tematów, tryb ciemny |
+| listopad 2026 | v1.2 | Duża aktualizacja: zakładki „Wkrótce” i „Obserwowane”, grupowanie po dniach, linki do aktów, klikalne tematy i organy, ikonki tematów, tryb ciemny, data wejścia w życie i organ wydający z ISAP, naprawa wyszukiwarki, pełne PWA, ok. 4× mniej pobieranych danych |
 
 ## Funkcje
 
@@ -115,6 +122,7 @@ src/
 ├── imports/                    # logo i zrzut ekranu
 └── styles/                     # Tailwind i motyw
 public/                         # manifest PWA i ikony
+docs/                           # zrzuty ekranu do README
 ```
 
 ## Źródło danych (API Sejmu RP)
@@ -122,7 +130,7 @@ public/                         # manifest PWA i ikony
 Aplikacja korzysta z publicznego API Sejmu RP w standardzie ELI (European Legislation Identifier).
 
 - Zapytanie używane w aplikacji: `https://api.sejm.gov.pl/eli/acts/search?publisher=DU&pubDateFrom={data}` – akty z ostatnich 30 dni, razem z datą wejścia w życie, organem wydającym i słowami kluczowymi
-- PDF aktu: `https://isap.sejm.gov.pl/isap.nsf/download.xsp/WDU{rok}{pozycja}/O/D{rok}{pozycja}.pdf`
+- PDF aktu pochodzi z ISAP, np. `https://isap.sejm.gov.pl/isap.nsf/download.xsp/WDU20260001539/O/D20261539.pdf`
 - Dokumentacja: [api.sejm.gov.pl/eli_pl.html](https://api.sejm.gov.pl/eli_pl.html)
 - Portal ISAP: [isap.sejm.gov.pl](https://isap.sejm.gov.pl/)
 
@@ -164,5 +172,5 @@ Prawa zastrzeżone dotyczą mojego kodu i projektu aplikacji. Projekt korzysta t
 <p align="center">
   Autor: <a href="https://github.com/piowerb">@piowerb</a> · <b>ZmiennikPrawny – bądź na bieżąco z prawem</b> ⚖️
   <br />
-  <a href="#zmiennikprawny">↑ Wróć na górę</a>
+  <a href="#spis-treści">↑ Wróć na górę</a>
 </p>
