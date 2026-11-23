@@ -53,7 +53,7 @@
 | wrzesień 2025 | Alfa | Początek prac, wewnętrzne testy i fundamenty aplikacji |
 | listopad 2025 | Beta | Pierwsza publiczna wersja, pierwsze opinie użytkowników |
 | maj 2026 | v1.0 | Pierwsza wersja stabilna: dopracowany interfejs i UX |
-| listopad 2026 | v1.2 | Duża aktualizacja: zakładki „Wkrótce” i „Obserwowane”, grupowanie po dniach, linki do aktów, klikalne tematy i organy, ikonki tematów, tryb ciemny, data wejścia w życie i organ wydający z ISAP, naprawa wyszukiwarki, pełne PWA, ok. 4× mniej pobieranych danych |
+| listopad 2026 | v1.2 | Aktualizacja: zakładki „Wkrótce” i „Obserwowane”, grupowanie po dniach, linki do aktów, klikalne tematy i organy, ikonki tematów, tryb ciemny, data wejścia w życie i organ wydający z ISAP, naprawa wyszukiwarki, pełne PWA, ok. 4× mniej pobieranych danych |
 
 ## Funkcje
 
