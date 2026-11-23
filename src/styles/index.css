@@ -1,3 +1,7 @@
 @import './fonts.css';
 @import './tailwind.css';
 @import './theme.css';
+
+/* iOS: notch / Dynamic Island i pasek domowy */
+.safe-area-top { padding-top: max(1rem, env(safe-area-inset-top)); }
+.fab-safe { bottom: calc(1.5rem + env(safe-area-inset-bottom)); }

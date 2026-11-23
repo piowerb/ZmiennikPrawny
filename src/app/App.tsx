@@ -4,7 +4,14 @@ import { fetchRecentLegalActs } from './services/isapService';
 import { LegalAct } from './types/LegalAct';
 
 // @ts-ignore
-import logo from '../imports/squircle_zmiennikprawny.png';
+import logo from '../imports/logo_zmiennikprawny_96.png';
+
+const FILTER_LABELS: Record<string, string> = {
+  all: 'Wszystkie',
+  ustawa: 'Ustawy',
+  rozporzadzenie: 'Rozporządzenia',
+  ogloszenie: 'Obwieszczenia',
+};
 
 export default function App() {
   const [acts, setActs] = useState<LegalAct[]>([]);
@@ -31,7 +38,10 @@ export default function App() {
 
   const filtered = acts
     .filter(a => filter === 'all' || a.category === filter)
-    .filter(a => !search || a.title.toLowerCase().includes(search.toLowerCase()));
+    .filter(a => {
+      const q = search.trim().toLowerCase();
+      return !q || a.title.toLowerCase().includes(q) || a.journalNumber.toLowerCase().includes(q);
+    });
 
   const fmt = (date: string) => new Date(date).toLocaleDateString('pl');
 
@@ -51,12 +61,15 @@ export default function App() {
   const highlightText = (text: string, highlight: string) => {
     if (!highlight.trim()) return text;
     
-    const parts = text.split(new RegExp(`(${highlight})`, 'gi'));
+    // Znaki specjalne (np. "(", "+", "?") muszą być zabezpieczone, inaczej RegExp wyrzuca błąd
+    const safe = highlight.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    if (!safe) return text;
+    const parts = text.split(new RegExp(`(${safe})`, 'gi'));
     
     return (
       <span>
         {parts.map((part, i) =>
-          part.toLowerCase() === highlight.toLowerCase() ? (
+          part.toLowerCase() === highlight.trim().toLowerCase() ? (
             <span key={i} className="bg-[#e6f4ed] text-[#005130] rounded-sm px-0.5">
               {part}
             </span>
@@ -119,7 +132,7 @@ export default function App() {
                       filter === f ? 'bg-[#005130] text-white' : 'bg-gray-100'
                     }`}
                   >
-                    {f === 'all' ? 'Wszystkie' : f.charAt(0).toUpperCase() + f.slice(1)}
+                    {FILTER_LABELS[f]}
                   </button>
                 ))}
               </div>
@@ -214,7 +227,7 @@ export default function App() {
         href="https://github.com/piowerb"
         target="_blank"
         rel="noopener noreferrer"
-        className="fixed bottom-6 right-6 flex items-center gap-2 bg-white border border-gray-200 shadow-sm rounded-full px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 hover:shadow-md transition-all z-50"
+        className="fab-safe fixed bottom-6 right-6 flex items-center gap-2 bg-white border border-gray-200 shadow-sm rounded-full px-4 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 hover:shadow-md transition-all z-50"
       >
         <GithubIcon className="w-4 h-4" />
         <span>Autor: @piowerb</span>
