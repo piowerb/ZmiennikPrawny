@@ -3,12 +3,14 @@ import { CheckIcon, ExternalLinkIcon, LandmarkIcon, LinkIcon } from 'lucide-reac
 import { Project } from '../types/Project';
 import { Highlight, fmt } from '../lib/text';
 import { PHASE_META, capitalizeFirst } from '../lib/phases';
-import { sejmProcessUrl } from '../services/projectsService';
+import { romanTerm, sejmProcessUrl, termOf } from '../services/projectsService';
 import { ProjectBadges } from './ProjectList';
 
 export function ProjectDetail({ project: p, search }: { project: Project; search: string }) {
   const [copied, setCopied] = useState(false);
   const meta = PHASE_META[p.phase];
+  const term = termOf(p);
+  const processUrl = sejmProcessUrl(p.number, term);
   const stages = [...p.stages].reverse(); // najnowszy etap na górze
 
   const copyLink = async () => {
@@ -23,7 +25,7 @@ export function ProjectDetail({ project: p, search }: { project: Project; search
 
   const askPrompt =
     `Wyjaśnij prostym językiem projekt ustawy (druk sejmowy nr ${p.number}) „${p.title}”. ` +
-    `Przebieg prac: ${sejmProcessUrl(p.number)}. Na jakim jest etapie, co ma zmienić i kogo dotyczy? ` +
+    `Przebieg prac: ${processUrl}. Na jakim jest etapie, co ma zmienić i kogo dotyczy? ` +
     `Zaznacz, że to projekt i jego treść może się jeszcze zmienić.`;
   const q = encodeURIComponent(askPrompt);
 
@@ -43,7 +45,7 @@ export function ProjectDetail({ project: p, search }: { project: Project; search
       <dl className="grid grid-cols-2 gap-3">
         <Info label="Etap" value={meta.label} note={meta.hint} className="col-span-2 sm:col-span-1" />
         <Info label="Ostatnia zmiana" value={p.lastStage ?? '—'} note={p.lastDate ? fmt(p.lastDate) : undefined} className="col-span-2 sm:col-span-1" />
-        <Info label="Druk sejmowy" value={`nr ${p.number}`} />
+        <Info label="Druk sejmowy" value={`nr ${p.number}`} note={`${romanTerm(term)} kadencja Sejmu`} />
         <Info label="Wpłynął do Sejmu" value={p.started ? fmt(p.started) : '—'} note={p.author ? `Projekt ${p.author.toLowerCase()}` : undefined} />
       </dl>
 
@@ -79,7 +81,7 @@ export function ProjectDetail({ project: p, search }: { project: Project; search
       )}
 
       <div className="space-y-2 pt-1">
-        <a href={sejmProcessUrl(p.number)} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 w-full min-h-[48px] rounded-xl font-medium text-white bg-[#005130] hover:bg-[#003d24] dark:bg-[#1f7a52] dark:hover:bg-[#25905f] shadow-sm transition-colors">
+        <a href={processUrl} target="_blank" rel="noopener noreferrer" className="flex items-center justify-center gap-2 w-full min-h-[48px] rounded-xl font-medium text-white bg-[#005130] hover:bg-[#003d24] dark:bg-[#1f7a52] dark:hover:bg-[#25905f] shadow-sm transition-colors">
           <LandmarkIcon className="w-5 h-5" /> Przebieg prac na sejm.gov.pl
         </a>
         <div className={`grid grid-cols-1 gap-2 ${p.rcl ? 'sm:grid-cols-2' : ''}`}>

@@ -9,7 +9,7 @@ import { daysFromToday, matches } from './lib/text';
 import { load, save } from './lib/storage';
 import { TopicIcon } from './lib/topicIcon';
 import { Project, ProjectPhase } from './types/Project';
-import { fetchProjects } from './services/projectsService';
+import { fetchProjects, termOf } from './services/projectsService';
 import { ProjectList } from './components/ProjectList';
 import { ProjectDetail } from './components/ProjectDetail';
 import { PHASE_META, PHASE_ORDER, matchesProject } from './lib/phases';
@@ -29,7 +29,8 @@ const FILTERS: { id: 'all' | LegalActCategory; label: string }[] = [
 ];
 const SOON_DAYS = 14;
 const ELI_HASH = /^#\/(DU\/\d{4}\/\d+)$/;
-const PROJ_HASH = /^#\/projekt\/(\d+)$/;
+// #/projekt/10/3400 (kadencja/druk); stare linki #/projekt/3400 nadal działają
+const PROJ_HASH = /^#\/projekt\/(?:(\d+)\/)?(\d+)$/;
 
 export default function App() {
   const [acts, setActs] = useState<LegalAct[]>([]);
@@ -96,7 +97,8 @@ export default function App() {
       if (pm) {
         setSelected(null);
         setTab('projects');
-        setSelectedProject(projects.find(p => p.number === pm[1]) ?? null);
+        const term = pm[1] ? Number(pm[1]) : null;
+        setSelectedProject(projects.find(p => p.number === pm[2] && (term === null || termOf(p) === term)) ?? null);
         mainRef.current?.scrollTo(0, 0);
         return;
       }
@@ -127,7 +129,7 @@ export default function App() {
   const openProject = (p: Project) => {
     listScroll.current = mainRef.current?.scrollTop ?? 0;
     openedFromList.current = true;
-    window.location.hash = `/projekt/${p.number}`;
+    window.location.hash = `/projekt/${termOf(p)}/${p.number}`;
   };
   const closeAct = () => {
     if (openedFromList.current) { openedFromList.current = false; window.history.back(); }

@@ -5,7 +5,8 @@
  *   → { eli, czego, kogo, zmiany[], model, generated, truncated, cached }
  *
  * GET /projects
- *   → { updated, count, projects[] } – projekty ustaw w toku (bez AI, dane z API Sejmu)
+ *   → { updated, terms[], count, projects[] } – projekty ustaw w toku (bez AI, dane z API Sejmu);
+ *     kadencja Sejmu ustalana automatycznie, więc po wyborach nic nie trzeba zmieniać.
  *
  * Bezpieczeństwo kosztów (plan Free = brak karty = brak rachunku):
  *  - każdy akt jest streszczany tylko raz, potem odpowiedź idzie z pamięci (KV),
@@ -14,6 +15,8 @@
  *  - długie akty są przycinane do MAX_CHARS znaków.
  *
  * Wiązania (Settings → Bindings): AI = Workers AI, CACHE = KV namespace.
+ * Harmonogram (Settings → Trigger events → Cron Triggers): co 15 minut,
+ * czyli wyrażenie 0,15,30,45 * * * * – odświeżanie projektów ustaw.
  */
 
 // Model główny (przetestowany na prawdziwych aktach: poprawny JSON i przepisy) + zapasowy.
@@ -140,6 +143,13 @@ export default {
     ]));
     return json({ ...result, cached: false }, 200, cors, 3600);
   },
+
+  // Harmonogram (Cron Trigger) – odświeża projekty ustaw także wtedy, gdy nikt nie odwiedza aplikacji.
+  async scheduled(event, env, ctx) {
+    ctx.waitUntil(refreshProjectsIfDue(env)
+      .then(s => console.log('[zp-proj] cron:', s))
+      .catch(e => console.log('[zp-proj] cron BŁĄD', String(e))));
+  },
 };
 
 export function cleanText(s) {
@@ -192,29 +202,35 @@ function json(body, status, headers, maxAge = 0) {
 // ─────────────────────────────────────────────────────────────────────────────
 // Projekty ustaw – „co nadchodzi” (GET /projects)
 //
-// Źródło: API Sejmu (procesy legislacyjne X kadencji). Pełna lista ma ~1 MB, a do
-// etapów potrzebny jest osobny odczyt każdego projektu, więc Worker składa gotową,
-// lekką listę i trzyma ją w KV. Odświeża ją najwyżej raz na godzinę, w tle
-// (użytkownik zawsze dostaje od razu ostatnią wersję).
+// Źródło: API Sejmu (procesy legislacyjne). Bieżącą kadencję Worker ustala sam
+// (/sejm/term → "current": true), więc po wyborach nic nie trzeba zmieniać.
+// Przez pierwsze PROJ_WINDOW_DAYS nowej kadencji dołącza też ustawy uchwalone
+// w poprzedniej, które czekają jeszcze na Senat, Prezydenta albo publikację
+// (niedokończone projekty poprzedniej kadencji wygasają – zasada dyskontynuacji).
 //
-// Limity planu Free: maks. 50 zapytań na wywołanie → przy jednym odświeżeniu
-// pobieramy najwyżej PROJ_DETAILS_PER_RUN szczegółów; reszta dochodzi w kolejnych
-// odświeżeniach (co PROJ_REFILL_MS, dopóki czegoś brakuje).
+// Lista jest składana w KV i odświeżana:
+//  - przez harmonogram (Cron Trigger, np. co 15 minut) – niezależnie od ruchu,
+//  - oraz przy odwiedzinach, gdy minęła godzina (w tle, bez czekania).
+//
+// Limity planu Free: maks. 50 zapytań na wywołanie → 1 (kadencje) + do 2 list
+// + PROJ_DETAILS_PER_RUN szczegółów; brakujące dochodzą w kolejnych odświeżeniach.
 // ─────────────────────────────────────────────────────────────────────────────
 
-const SEJM_PROC = 'https://api.sejm.gov.pl/sejm/term10/processes';
-const PROJ_KEY = 'projects:v1';
+const SEJM_API = 'https://api.sejm.gov.pl/sejm';
+const PROJ_KEY = 'projects:v2';
+const PROJ_KEY_OLD = 'projects:v1';  // poprzedni format (tylko X kadencja) – przejmowany przy pierwszym odświeżeniu
+const PROJ_TERM_FALLBACK = 10;       // gdy API kadencji chwilowo nie odpowiada i nie ma nic zapisanego
 const PROJ_WINDOW_DAYS = 120;        // projekty z ruchem w ostatnich 120 dniach
-const PROJ_DETAILS_PER_RUN = 40;     // + 1 zapytanie o listę = 41 < 50
+const PROJ_DETAILS_PER_RUN = 40;     // 1 + 2 + 40 = 43 < 50
 const PROJ_REFRESH_MS = 60 * 60 * 1000;
-const PROJ_REFILL_MS = 60 * 1000;           // dociąganie brakujących szczegółów co minutę
+const PROJ_REFILL_MS = 60 * 1000;    // dociąganie brakujących szczegółów co minutę
 let projRebuilding = false;          // blokada w obrębie jednej instancji
 
 export async function handleProjects(env, ctx, cors, json) {
-  const stored = await env.CACHE.get(PROJ_KEY, 'json');
+  const stored = await loadProjects(env);
   const now = Date.now();
 
-  if (stored && now < stored.nextRefresh) return json(publicView(stored), 200, cors, 600);
+  if (stored && stored.v === 2 && now < stored.nextRefresh) return json(publicView(stored), 200, cors, 600);
 
   if (stored) {
     // Mamy starszą wersję: oddajemy ją od razu, odświeżamy w tle.
@@ -232,53 +248,102 @@ export async function handleProjects(env, ctx, cors, json) {
   }
 }
 
+/** Wywoływane przez Cron Trigger: odświeża listę, gdy nadszedł czas. */
+export async function refreshProjectsIfDue(env) {
+  const stored = await loadProjects(env);
+  if (stored && stored.v === 2 && Date.now() < stored.nextRefresh) return 'aktualne';
+  await rebuildProjects(env, stored);
+  return 'odświeżone';
+}
+
+async function loadProjects(env) {
+  const v2 = await env.CACHE.get(PROJ_KEY, 'json');
+  if (v2) return v2;
+  const v1 = await env.CACHE.get(PROJ_KEY_OLD, 'json');
+  if (!v1 || !v1.items) return null;
+  // Stary format: klucz = numer druku, zawsze X kadencja.
+  const items = {};
+  for (const p of Object.values(v1.items)) items[`10/${p.number}`] = { ...p, term: 10 };
+  return { v: 1, updated: v1.updated, nextRefresh: 0, terms: [10], items };
+}
+
+/** Bieżąca kadencja (+ poprzednia przez pierwsze PROJ_WINDOW_DAYS nowej). */
+export async function activeTerms(prevTerms) {
+  try {
+    const res = await fetch(`${SEJM_API}/term`, { cf: { cacheTtl: 6 * 3600 } });
+    if (!res.ok) throw new Error(`kadencje ${res.status}`);
+    const terms = await res.json();
+    const valid = (Array.isArray(terms) ? terms : []).filter(t => t && Number.isInteger(t.num));
+    if (!valid.length) throw new Error('brak kadencji');
+    const cur = valid.find(t => t.current) || valid.reduce((a, b) => (b.num > a.num ? b : a));
+    const out = [{ num: cur.num, onlyPassed: false }];
+    const since = cur.from ? (Date.now() - Date.parse(cur.from)) / 864e5 : Infinity;
+    if (cur.num > 1 && since < PROJ_WINDOW_DAYS) out.push({ num: cur.num - 1, onlyPassed: true });
+    return out;
+  } catch (e) {
+    console.log('[zp-proj] kadencje niedostępne, używam zapisanych', String(e));
+    const nums = prevTerms && prevTerms.length ? prevTerms : [PROJ_TERM_FALLBACK];
+    return nums.map((num, i) => ({ num, onlyPassed: i > 0 }));
+  }
+}
+
 async function rebuildProjects(env, prev) {
   projRebuilding = true;
   try {
     const t0 = Date.now();
-    const res = await fetch(`${SEJM_PROC}?documentType=projekt%20ustawy&limit=5000`, { cf: { cacheTtl: 600 } });
-    if (!res.ok) throw new Error(`lista ${res.status}`);
-    const list = await res.json();
+    const terms = await activeTerms(prev && prev.terms);
 
-    const cands = pickCandidates(list, Date.now());
+    const lists = await Promise.all(terms.map(async t => {
+      const res = await fetch(`${SEJM_API}/term${t.num}/processes?documentType=projekt%20ustawy&limit=5000`, { cf: { cacheTtl: 600 } });
+      if (!res.ok) throw new Error(`lista term${t.num}: ${res.status}`);
+      return pickCandidates(await res.json(), Date.now(), t.num, t.onlyPassed);
+    }));
+    const cands = lists.flat().sort((a, b) => b.changeDate.localeCompare(a.changeDate));
+
     const prevItems = (prev && prev.items) || {};
-    const stale = cands.filter(c => !prevItems[c.number] || prevItems[c.number].changeDate !== c.changeDate);
+    const stale = cands.filter(c => !prevItems[c.key] || prevItems[c.key].changeDate !== c.changeDate);
     const toFetch = stale.slice(0, PROJ_DETAILS_PER_RUN);
 
     const fetched = await Promise.all(toFetch.map(c =>
-      fetch(`${SEJM_PROC}/${c.number}`).then(r => (r.ok ? r.json() : null)).catch(() => null)));
+      fetch(`${SEJM_API}/term${c.term}/processes/${c.number}`)
+        .then(r => (r.ok ? r.json() : null))
+        .then(d => (d ? { c, d } : null))
+        .catch(() => null)));
 
     const items = {};
-    for (const c of cands) if (prevItems[c.number]) items[c.number] = prevItems[c.number];
-    for (const d of fetched) {
-      if (!d) continue;
-      const p = slimProject(d);
-      if (p) items[p.number] = p; else delete items[d.number]; // np. już opublikowany
+    for (const c of cands) if (prevItems[c.key]) items[c.key] = prevItems[c.key];
+    for (const f of fetched) {
+      if (!f) continue;
+      const p = slimProject(f.d, f.c.term);
+      if (p) items[f.c.key] = p; else delete items[f.c.key]; // np. już opublikowany
     }
 
     const missing = stale.length - fetched.filter(Boolean).length;
     const blob = {
-      v: 1,
+      v: 2,
       updated: new Date().toISOString(),
       nextRefresh: Date.now() + (missing > 0 ? PROJ_REFILL_MS : PROJ_REFRESH_MS),
+      terms: terms.map(t => t.num),
       items,
     };
     await env.CACHE.put(PROJ_KEY, JSON.stringify(blob));
-    console.log(`[zp-proj] lista ${list.length}, kandydaci ${cands.length}, pobrano ${toFetch.length}, brakuje ${missing}, ${Date.now() - t0}ms`);
+    console.log(`[zp-proj] kadencje ${blob.terms.join('+')}, kandydaci ${cands.length}, pobrano ${toFetch.length}, brakuje ${missing}, ${Date.now() - t0}ms`);
     return blob;
   } finally {
     projRebuilding = false;
   }
 }
 
-/** Projekty „w drodze”: niezakończone albo uchwalone, ale jeszcze nieopublikowane. */
-export function pickCandidates(list, now) {
+/**
+ * Projekty „w drodze”: niezakończone albo uchwalone, ale jeszcze nieopublikowane.
+ * onlyPassed – dla poprzedniej kadencji tylko ustawy już uchwalone przez Sejm.
+ */
+export function pickCandidates(list, now, term = PROJ_TERM_FALLBACK, onlyPassed = false) {
   const minDate = now - PROJ_WINDOW_DAYS * 864e5;
-  return list
+  return (Array.isArray(list) ? list : [])
     .filter(p => p && p.number && p.changeDate && new Date(p.changeDate).getTime() >= minDate)
-    .filter(p => (!p.passed && !p.closureDate) || (p.passed && !p.ELI))
-    .sort((a, b) => b.changeDate.localeCompare(a.changeDate))
-    .map(p => ({ number: String(p.number), changeDate: p.changeDate }));
+    .filter(p => (!onlyPassed && !p.passed && !p.closureDate) || (p.passed && !p.ELI))
+    .map(p => ({ key: `${term}/${p.number}`, term, number: String(p.number), changeDate: p.changeDate }));
 }
 
 /** Etap projektu w prostych kategoriach. */
@@ -297,7 +362,7 @@ export function phaseOf(stages) {
 const AUTHOR = /^(Rządowy|Poselski|Senacki|Obywatelski|Prezydencki|Komisyjny)\s+projekt\s+ustawy\s*/i;
 const AUTHOR_PRESIDENT = /^Przedstawiony przez Prezydenta Rzeczypospolitej Polskiej projekt ustawy\s*/i;
 
-export function slimProject(d) {
+export function slimProject(d, term = PROJ_TERM_FALLBACK) {
   if (!d || !d.number || d.ELI) return null; // opublikowany → jest już na liście aktów
   if (d.closureDate && !d.passed) return null; // odrzucony / wycofany
   const stages = (d.stages || [])
@@ -314,6 +379,7 @@ export function slimProject(d) {
   const pm = !am && title.match(AUTHOR_PRESIDENT);
   const cut = am ? am[0].length : pm ? pm[0].length : 0;
   return {
+    term: Number(d.term) || term,
     number: String(d.number),
     title: cut ? `Projekt ustawy ${title.slice(cut)}` : title,
     author: am ? am[1][0].toUpperCase() + am[1].slice(1).toLowerCase() : pm ? 'Prezydencki' : null,
@@ -337,6 +403,7 @@ function publicView(blob) {
   const projects = Object.values(blob.items || {}).sort((a, b) =>
     (PHASE_ORDER[a.phase] - PHASE_ORDER[b.phase]) ||
     String(b.lastDate || '').localeCompare(String(a.lastDate || '')) ||
+    ((b.term || 0) - (a.term || 0)) ||
     (+b.number - +a.number));
-  return { updated: blob.updated, count: projects.length, projects };
+  return { updated: blob.updated, terms: blob.terms || [], count: projects.length, projects };
 }

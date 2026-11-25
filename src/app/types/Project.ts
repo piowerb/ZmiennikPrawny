@@ -9,7 +9,8 @@ export interface ProjectStage {
 
 /** Projekt ustawy w toku (endpoint /projects Workera, dane z API Sejmu). */
 export interface Project {
-  number: string;          // numer druku sejmowego
+  term?: number;           // kadencja Sejmu (np. 10); starsze odpowiedzi jej nie miały → 10
+  number: string;          // numer druku sejmowego (unikalny tylko w obrębie kadencji)
   title: string;
   author: string | null;   // Rządowy, Poselski, Senacki, Prezydencki…
   description: string | null; // opis Kancelarii Sejmu

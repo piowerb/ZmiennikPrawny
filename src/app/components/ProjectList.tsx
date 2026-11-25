@@ -2,6 +2,7 @@ import { ChevronRightIcon } from 'lucide-react';
 import { Project } from '../types/Project';
 import { Highlight, fmt } from '../lib/text';
 import { PHASE_META, PHASE_ORDER } from '../lib/phases';
+import { termOf } from '../services/projectsService';
 
 interface Props {
   projects: Project[];
@@ -37,7 +38,7 @@ export function ProjectList({ projects, search, onOpen, empty }: Props) {
             </h2>
             <ul className="divide-y divide-gray-200 dark:divide-[#26302b]">
               {g.items.map(p => (
-                <li key={p.number}>
+                <li key={`${termOf(p)}/${p.number}`}>
                   <ProjectRow project={p} search={search} onOpen={onOpen} />
                 </li>
               ))}
