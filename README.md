@@ -17,7 +17,7 @@
   </p>
 
   <p>
-    <a href="https://zmiennikprawny.vercel.app/"><img alt="Otwórz aplikację" src="https://img.shields.io/badge/Otwórz_aplikację-005130?style=for-the-badge" /></a>
+    <a href="https://app.zmiennikprawny.pl/"><img alt="Otwórz aplikację" src="https://img.shields.io/badge/Otwórz_aplikację-005130?style=for-the-badge" /></a>
     &nbsp;
     <a href="https://zmiennikprawny.pl"><img alt="Strona projektu" src="https://img.shields.io/badge/zmiennikprawny.pl-ffffff?style=for-the-badge&labelColor=ffffff&color=e6f4ed" /></a>
   </p>
@@ -164,7 +164,7 @@ Akty normatywne i urzędowe dokumenty nie są przedmiotem prawa autorskiego (art
 
 Aplikacja działa w przeglądarce, ale można ją też dodać do ekranu głównego jak zwykłą aplikację:
 
-1. Otwórz [zmiennikprawny.vercel.app](https://zmiennikprawny.vercel.app/) w Safari
+1. Otwórz [app.zmiennikprawny.pl](https://app.zmiennikprawny.pl/) w Safari
 2. Stuknij „Udostępnij” (kwadrat ze strzałką)
 3. Wybierz „Dodaj do ekranu początkowego”
 
