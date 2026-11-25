@@ -53,7 +53,7 @@
 | **Kontakt** | [kontakt@zmiennikprawny.pl](mailto:kontakt@zmiennikprawny.pl) |
 | **Początek prac** | wrzesień 2025 |
 | **Pierwsze publiczne wydanie** | listopad 2025 (Beta) |
-| **Aktualna wersja** | v1.4 (listopad 2026) |
+| **Aktualna wersja** | v1.3 (listopad 2026) |
 | **Język interfejsu** | polski |
 | **Platformy** | przeglądarka, Android, iOS (jako PWA) |
 | **Technologie** | React, TypeScript, Tailwind CSS, Vite, Cloudflare Workers AI |
@@ -102,8 +102,7 @@ Przy każdym uruchomieniu aplikacja pobiera z API Sejmu RP akty opublikowane w D
 | listopad 2025 | Beta | Pierwsza publiczna wersja, pierwsze opinie użytkowników |
 | maj 2026 | v1.0 | Pierwsza wersja stabilna: dopracowany interfejs i UX |
 | październik 2026 | v1.2 | Aktualizacja: zakładki „Wkrótce” i „Obserwowane”, grupowanie po dniach, linki do aktów, klikalne tematy i organy, ikonki tematów, tryb ciemny, data wejścia w życie i organ wydający z ISAP, naprawa wyszukiwarki, pełne PWA, ok. 4× mniej pobieranych danych |
-| listopad 2026 | v1.3 | Wyjaśnienia AI (beta): streszczenie aktu prostym językiem z odnośnikami do przepisów, przyciski „Zapytaj ChatGPT / Claude”, własny backend na Cloudflare Workers, domena app.zmiennikprawny.pl |
-| listopad 2026 | v1.4 | Projekty ustaw: nowa zakładka z projektami w Sejmie, Senacie i u Prezydenta (opis Kancelarii Sejmu, przebieg prac, linki do Sejmu i RCL), automatyczne rozpoznawanie kadencji Sejmu, odświeżanie co 15 minut; anonimowe statystyki (Cloudflare Web Analytics); poprawki dostępności |
+| listopad 2026 | v1.3 | Wyjaśnienia AI (beta) z odnośnikami do przepisów i przyciskami „Zapytaj ChatGPT / Claude”, zakładka „Projekty” z projektami ustaw w Sejmie, Senacie i u Prezydenta, własny backend na Cloudflare Workers, domena app.zmiennikprawny.pl, anonimowe statystyki i poprawki dostępności |
 
 ## Funkcje
 
