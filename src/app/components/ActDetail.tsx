@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { CheckIcon, CopyIcon, ExternalLinkIcon, FileTextIcon, LinkIcon } from 'lucide-react';
 import { LegalAct } from '../types/LegalAct';
 import { TopicIcon } from '../lib/topicIcon';
+import { AiSummary } from './AiSummary';
 import { CATEGORY_META, Highlight, effectiveShort, fmt, publishedLabel } from '../lib/text';
 
 interface Props {
@@ -79,6 +80,8 @@ export function ActDetail({ act: a, search, onTag, onBody }: Props) {
           </div>
         </div>
       )}
+
+      <AiSummary key={a.id} act={a} />
 
       <div className="space-y-2 pt-1">
         {a.pdfUrl && (

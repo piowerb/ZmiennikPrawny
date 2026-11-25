@@ -227,7 +227,7 @@ export default function App() {
 
           <footer className="px-4 pt-8 pb-[calc(2.5rem+env(safe-area-inset-bottom))] text-xs text-center text-gray-500 dark:text-[#7f8a84] space-y-2">
             <p>Dane: oficjalne API Sejmu RP (ELI). ZmiennikPrawny nie jest serwisem Sejmu RP, a informacje mają charakter pomocniczy i nie stanowią porady prawnej. Wiążący jest wyłącznie tekst opublikowany w Dzienniku Ustaw.</p>
-            <p>Bez kont i ciasteczek. Motyw i obserwowane tematy zapisują się tylko w Twojej przeglądarce.</p>
+            <p>Bez kont i ciasteczek. Motyw i obserwowane tematy zapisują się tylko w Twojej przeglądarce. Wyjaśnienia AI tworzy Cloudflare Workers AI wyłącznie na podstawie publicznego tekstu aktu – nie wysyłamy żadnych Twoich danych.</p>
             <a href="https://github.com/piowerb" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 min-h-[36px] px-3 rounded-full border border-gray-200 dark:border-[#26302b] hover:text-gray-900 dark:hover:text-[#e8ece9]">
               <GithubIcon className="w-3.5 h-3.5" /> Autor: Piotr Werbowy
             </a>
