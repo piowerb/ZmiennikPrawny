@@ -178,7 +178,7 @@ export default function App() {
     { id: 'projects', label: 'Projekty', count: projState === 'done' ? projShown.length : undefined },
   ];
 
-  const pill = (active: boolean) => `px-4 min-h-[40px] rounded-full text-sm whitespace-nowrap transition-colors ${
+  const pill = (active: boolean) => `px-3.5 sm:px-4 min-h-[40px] rounded-full text-sm whitespace-nowrap transition-colors ${
     active ? 'bg-[#005130] text-white dark:bg-[#1f7a52]' : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-[#1a221e] dark:text-[#c9d1cc] dark:hover:bg-[#222c27]'}`;
 
   return (
@@ -193,7 +193,7 @@ export default function App() {
             )}
             <a href="https://zmiennikprawny.pl" className="flex items-center gap-3 min-w-0 rounded-xl" aria-label="ZmiennikPrawny – strona projektu" title="Strona projektu zmiennikprawny.pl">
               <img src={logo} alt="" className="w-10 h-10 rounded-xl shadow-sm flex-shrink-0" />
-              <span className={`font-bold text-xl tracking-tight truncate ${isDetail ? 'hidden sm:inline' : ''}`}>ZmiennikPrawny</span>
+              <span className={`font-bold text-lg min-[360px]:text-xl tracking-tight ${isDetail ? 'hidden sm:inline' : ''}`}>ZmiennikPrawny</span>
             </a>
           </div>
           <div className="flex items-center gap-1">
@@ -222,13 +222,13 @@ export default function App() {
                   <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <input
                     type="search"
-                    placeholder={tab === 'projects' ? 'Szukaj projektów, numerów druków…' : 'Szukaj aktów, organów, tematów…'}
+                    placeholder={tab === 'projects' ? 'Szukaj projektów i druków…' : 'Szukaj aktów i tematów…'}
                     value={search}
                     onChange={e => setSearch(e.target.value)}
                     className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 bg-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#005130] dark:bg-[#121916] dark:border-[#26302b] dark:focus:ring-[#6fd3a2]"
                   />
                 </div>
-                <div role="tablist" className="flex gap-1 p-1 rounded-xl bg-gray-100 dark:bg-[#151d19]">
+                <div role="tablist" className="grid grid-cols-2 min-[360px]:flex gap-1 p-1 rounded-xl bg-gray-100 dark:bg-[#151d19]">
                   {tabs.map(t => (
                     <button key={t.id} role="tab" aria-selected={tab === t.id} onClick={() => setTab(t.id)}
                       className={`relative flex-auto min-h-[40px] px-2 rounded-lg text-[13px] sm:text-sm font-medium whitespace-nowrap transition-colors ${tab === t.id ? 'bg-white shadow-sm text-[#005130] dark:bg-[#0e1311] dark:text-[#6fd3a2]' : 'text-gray-600 dark:text-[#9aa59f]'}`}>
@@ -237,7 +237,7 @@ export default function App() {
                     </button>
                   ))}
                 </div>
-                <div className="flex gap-2 overflow-x-auto scrollbar-hide -mx-4 px-4">
+                <div className="flex flex-wrap gap-2">
                   {tab === 'projects'
                     ? phaseFilters.map(f => (
                       <button key={f.id} onClick={() => setPhase(f.id)} className={pill(phase === f.id)}>{f.label}</button>

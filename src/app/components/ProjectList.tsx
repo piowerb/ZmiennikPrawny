@@ -73,17 +73,22 @@ function ProjectRow({ project: p, search, onOpen }: { project: Project; search: 
         <div className="flex flex-wrap items-center gap-1.5">
           <ProjectBadges project={p} />
         </div>
-        <h3 className="font-semibold mt-1.5 leading-snug line-clamp-3 text-gray-900 dark:text-[#e8ece9]">
+        <h3 className="font-semibold mt-1.5 leading-snug text-gray-900 dark:text-[#e8ece9]">
           <Highlight text={p.title} query={search} />
         </h3>
         <p className="text-sm text-gray-500 dark:text-[#9aa59f] mt-1.5">
           <span className="font-medium text-gray-700 dark:text-[#c9d1cc]">Druk nr {p.number}</span>
-          {p.lastStage && (
-            <>
-              <span aria-hidden className="inline-block w-1 h-1 mx-2 align-middle rounded-full bg-gray-300 dark:bg-[#3a4640]" />
-              {p.lastStage}{p.lastDate ? `, ${fmt(p.lastDate)}` : ''}
-            </>
-          )}
+          {p.lastStage && (() => {
+            const text = `${p.lastStage}${p.lastDate ? `, ${fmt(p.lastDate)}` : ''}`;
+            const cut = text.indexOf(' ');
+            return (
+              <>
+                {' '}
+                <span className="whitespace-nowrap"><span aria-hidden className="inline-block w-1 h-1 ml-1 mr-2 align-middle rounded-full bg-gray-300 dark:bg-[#3a4640]" />{cut > 0 ? text.slice(0, cut) : text}</span>
+                {cut > 0 ? text.slice(cut) : ''}
+              </>
+            );
+          })()}
         </p>
       </div>
       <ChevronRightIcon className="w-5 h-5 text-gray-300 dark:text-[#3a4640] flex-shrink-0 mt-2" />
