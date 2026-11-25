@@ -138,10 +138,10 @@ export default function App() {
                 <ArrowLeftIcon className="w-5 h-5" /> Wstecz
               </button>
             )}
-            <button onClick={() => { setRefine(null); setSearch(''); window.location.hash = ''; }} className="flex items-center gap-3 min-w-0" aria-label="ZmiennikPrawny – lista aktów">
+            <a href="https://zmiennikprawny.pl" className="flex items-center gap-3 min-w-0 rounded-xl" aria-label="ZmiennikPrawny – strona projektu" title="Strona projektu zmiennikprawny.pl">
               <img src={logo} alt="" className="w-10 h-10 rounded-xl shadow-sm flex-shrink-0" />
               <span className={`font-bold text-xl tracking-tight truncate ${selected ? 'hidden sm:inline' : ''}`}>ZmiennikPrawny</span>
-            </button>
+            </a>
           </div>
           <div className="flex items-center gap-1">
             <button onClick={toggleDark} aria-label={dark ? 'Włącz jasny motyw' : 'Włącz ciemny motyw'} className="w-11 h-11 grid place-items-center rounded-full text-gray-600 hover:bg-gray-100 dark:text-[#9aa59f] dark:hover:bg-[#1a221e]">
