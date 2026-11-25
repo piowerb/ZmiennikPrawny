@@ -1,7 +1,7 @@
 {
   "name": "ZmiennikPrawny",
   "short_name": "ZmiennikPrawny",
-  "description": "Monitorowanie nowych ustaw z Dziennika Ustaw RP w czasie rzeczywistym",
+  "description": "Nowe akty z Dziennika Ustaw RP i projekty ustaw w Sejmie – na bieżąco, z wyjaśnieniami AI prostym językiem",
   "lang": "pl",
   "start_url": "/",
   "scope": "/",

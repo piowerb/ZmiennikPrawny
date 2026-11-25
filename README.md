@@ -12,7 +12,7 @@
     <img alt="Vercel" src="https://img.shields.io/badge/hosting-Vercel-000000?style=flat-square&logo=vercel&logoColor=white" />
     <img alt="AI: Cloudflare Workers AI" src="https://img.shields.io/badge/AI-Cloudflare_Workers_AI-F38020?style=flat-square&logo=cloudflare&logoColor=white" />
     <br />
-    <img alt="Dane: API Sejmu RP" src="https://img.shields.io/badge/dane-API_Sejmu_RP_(ELI)-005130?style=flat-square" />
+    <img alt="Dane: API Sejmu RP" src="https://img.shields.io/badge/dane-API_Sejmu_RP_(ELI_+_proces_legislacyjny)-005130?style=flat-square" />
     <img alt="Bez kont i ciasteczek" src="https://img.shields.io/badge/konta_i_ciasteczka-brak-005130?style=flat-square" />
     <img alt="Ostatnia zmiana" src="https://img.shields.io/github/last-commit/piowerb/ZmiennikPrawny?style=flat-square&label=ostatnia%20zmiana" />
   </p>
@@ -34,11 +34,17 @@
   <img src="docs/screenshot-mobile-ai.png" width="180" alt="ZmiennikPrawny na telefonie – wyjaśnienie AI" />
   &nbsp;
   <img src="docs/screenshot-mobile-dark.png" width="180" alt="ZmiennikPrawny na telefonie – tryb ciemny" />
+
+  <br /><br />
+
+  <img src="docs/screenshot-mobile-projects.png" width="180" alt="ZmiennikPrawny na telefonie – projekty ustaw" />
+  &nbsp;
+  <img src="docs/screenshot-mobile-project-detail.png" width="180" alt="ZmiennikPrawny na telefonie – szczegóły projektu ustawy" />
 </div>
 
 ---
 
-**ZmiennikPrawny** – polska aplikacja internetowa z kategorii LegalTech, służąca do śledzenia nowych aktów prawnych ogłaszanych w Dzienniku Ustaw Rzeczypospolitej Polskiej. Pokazuje ustawy, rozporządzenia i obwieszczenia w formie przejrzystej listy, razem z datą wejścia w życie, organem wydającym i tematami. Każdy akt można też wyjaśnić prostym językiem dzięki AI. Działa w przeglądarce i jako aplikacja progresywna (PWA) na telefonie. Korzysta z publicznego API Sejmu RP. Projekt jest rozwijany od 2025 roku przez Piotra Werbowego ([@piowerb](https://github.com/piowerb)).
+**ZmiennikPrawny** – polska aplikacja internetowa z kategorii LegalTech, służąca do śledzenia nowych aktów prawnych ogłaszanych w Dzienniku Ustaw Rzeczypospolitej Polskiej. Pokazuje ustawy, rozporządzenia i obwieszczenia w formie przejrzystej listy, razem z datą wejścia w życie, organem wydającym i tematami. Każdy akt można też wyjaśnić prostym językiem dzięki AI, a osobna zakładka pokazuje projekty ustaw, które dopiero przechodzą przez Sejm, Senat i trafiają do Prezydenta. Działa w przeglądarce i jako aplikacja progresywna (PWA) na telefonie. Korzysta z publicznego API Sejmu RP. Projekt jest rozwijany od 2025 roku przez Piotra Werbowego ([@piowerb](https://github.com/piowerb)).
 
 | | |
 |---|---|
@@ -47,11 +53,11 @@
 | **Kontakt** | [kontakt@zmiennikprawny.pl](mailto:kontakt@zmiennikprawny.pl) |
 | **Początek prac** | wrzesień 2025 |
 | **Pierwsze publiczne wydanie** | listopad 2025 (Beta) |
-| **Aktualna wersja** | v1.3 (listopad 2026) |
+| **Aktualna wersja** | v1.4 (listopad 2026) |
 | **Język interfejsu** | polski |
 | **Platformy** | przeglądarka, Android, iOS (jako PWA) |
 | **Technologie** | React, TypeScript, Tailwind CSS, Vite, Cloudflare Workers AI |
-| **Źródło danych** | API Sejmu RP (ELI) |
+| **Źródło danych** | API Sejmu RP (ELI i proces legislacyjny) |
 | **Licencja** | wszelkie prawa zastrzeżone |
 | **Strona** | [zmiennikprawny.pl](https://zmiennikprawny.pl) |
 
@@ -65,6 +71,7 @@
 - [Struktura projektu](#struktura-projektu)
 - [Źródło danych (API Sejmu RP)](#źródło-danych-api-sejmu-rp)
 - [ZmiennikPrawny AI](#zmiennikprawny-ai)
+- [Projekty ustaw](#projekty-ustaw)
 - [iPhone i PWA](#iphone-i-pwa)
 - [Licencja i prawa autorskie](#licencja-i-prawa-autorskie)
 
@@ -78,7 +85,7 @@ ZmiennikPrawny powstał, żeby to uprościć: jedna lista nowych aktów, czyteln
 
 ### Jak działa
 
-Przy każdym uruchomieniu aplikacja pobiera z API Sejmu RP akty opublikowane w Dzienniku Ustaw w ciągu ostatnich 30 dni. Każdy akt jest przypisywany do kategorii (ustawa, rozporządzenie, obwieszczenie), a jego słowa kluczowe stają się tematami, które można kliknąć albo obserwować. Zakładka „Wkrótce” zbiera akty wchodzące w życie w ciągu 14 dni. W szczegółach aktu można poprosić AI o wyjaśnienie: czego dotyczy, kogo dotyczy i co zmienia – zawsze z odnośnikiem do przepisu. Obserwowane tematy i ustawienia są zapisywane wyłącznie w przeglądarce użytkownika – aplikacja nie ma kont, ciasteczek ani analityki.
+Przy każdym uruchomieniu aplikacja pobiera z API Sejmu RP akty opublikowane w Dzienniku Ustaw w ciągu ostatnich 30 dni. Każdy akt jest przypisywany do kategorii (ustawa, rozporządzenie, obwieszczenie), a jego słowa kluczowe stają się tematami, które można kliknąć albo obserwować. Zakładka „Wkrótce” zbiera akty wchodzące w życie w ciągu 14 dni. W szczegółach aktu można poprosić AI o wyjaśnienie: czego dotyczy, kogo dotyczy i co zmienia – zawsze z odnośnikiem do przepisu. Zakładka „Projekty” pokazuje, co dopiero nadchodzi: projekty ustaw w Sejmie, w Senacie i u Prezydenta, z oficjalnym opisem Kancelarii Sejmu i przebiegiem prac. Obserwowane tematy i ustawienia są zapisywane wyłącznie w przeglądarce użytkownika – aplikacja nie ma kont ani ciasteczek, a liczy tylko anonimowe statystyki odwiedzin (Cloudflare Web Analytics, bez ciasteczek i bez identyfikowania użytkownika).
 
 ### Dla kogo
 
@@ -96,6 +103,7 @@ Przy każdym uruchomieniu aplikacja pobiera z API Sejmu RP akty opublikowane w D
 | maj 2026 | v1.0 | Pierwsza wersja stabilna: dopracowany interfejs i UX |
 | październik 2026 | v1.2 | Aktualizacja: zakładki „Wkrótce” i „Obserwowane”, grupowanie po dniach, linki do aktów, klikalne tematy i organy, ikonki tematów, tryb ciemny, data wejścia w życie i organ wydający z ISAP, naprawa wyszukiwarki, pełne PWA, ok. 4× mniej pobieranych danych |
 | listopad 2026 | v1.3 | Wyjaśnienia AI (beta): streszczenie aktu prostym językiem z odnośnikami do przepisów, przyciski „Zapytaj ChatGPT / Claude”, własny backend na Cloudflare Workers, domena app.zmiennikprawny.pl |
+| listopad 2026 | v1.4 | Projekty ustaw: nowa zakładka z projektami w Sejmie, Senacie i u Prezydenta (opis Kancelarii Sejmu, przebieg prac, linki do Sejmu i RCL), automatyczne rozpoznawanie kadencji Sejmu, odświeżanie co 15 minut; anonimowe statystyki (Cloudflare Web Analytics); poprawki dostępności |
 
 ## Funkcje
 
@@ -106,6 +114,8 @@ Przy każdym uruchomieniu aplikacja pobiera z API Sejmu RP akty opublikowane w D
 - **Obserwowane tematy** – własna lista słów (zapisana tylko w przeglądarce, bez konta) z oznaczeniem nowych aktów od ostatniej wizyty
 - **Klikalne tematy i organy** – jedno kliknięcie pokazuje wszystkie akty z danym tematem albo od danego organu; każdy temat ma swoją ikonkę
 - **Wyjaśnienia AI (beta)** – w szczegółach aktu jedno kliknięcie daje streszczenie prostym językiem: czego dotyczy, kogo dotyczy i najważniejsze zmiany, każda z przepisem; daty zawsze z ISAP, nie z AI
+- **Projekty ustaw** – co dopiero nadchodzi: projekty pogrupowane według etapu (podpisane, u Prezydenta, w Senacie, w Sejmie, weto, Trybunał Konstytucyjny), z oznaczeniem wnioskodawcy, trybu pilnego i wdrażania prawa UE
+- **Szczegóły projektu** – opis Kancelarii Sejmu, pełny przebieg prac z datami i decyzjami, linki do sejm.gov.pl i do prac rządu w RCL, własny adres (np. `/#/projekt/10/3400`)
 - **Pytania do aktu** – przyciski „Zapytaj ChatGPT” i „Zapytaj Claude” otwierają rozmowę z gotowym pytaniem o konkretny akt
 - **Szczegóły aktu** – sygnatura, data publikacji i wejścia w życie, organ, tematy, link do PDF i do strony w ISAP, kopiowanie sygnatury i linku
 - **Linki do aktów** – każdy akt ma własny adres (np. `/#/DU/2026/1539`), działa przycisk „wstecz”
@@ -122,7 +132,9 @@ Przy każdym uruchomieniu aplikacja pobiera z API Sejmu RP akty opublikowane w D
 | Ikony | Lucide React |
 | Dane | API Sejmu RP (ELI) |
 | AI | Cloudflare Workers AI (Gemma 4 26B, zapasowo GLM-4.7 Flash) + Workers KV |
-| Hosting | Vercel (aplikacja), Cloudflare Workers (AI) |
+| Backend | Cloudflare Worker: wyjaśnienia AI i projekty ustaw, harmonogram (Cron Trigger) co 15 minut |
+| Statystyki | Cloudflare Web Analytics (bez ciasteczek) |
+| Hosting | Vercel (aplikacja), Cloudflare Workers (backend) |
 
 ## Uruchomienie lokalne
 
@@ -150,26 +162,31 @@ Zbudowane pliki trafią do folderu `dist/`.
 ```text
 src/
 ├── app/
-│   ├── App.tsx                 # układ, zakładki, filtry, routing (#/DU/rok/pozycja)
+│   ├── App.tsx                 # układ, zakładki, filtry, routing (#/DU/rok/pozycja, #/projekt/kadencja/druk)
 │   ├── components/
 │   │   ├── ActList.tsx         # lista aktów pogrupowana po dniach
 │   │   ├── ActDetail.tsx       # szczegóły aktu
 │   │   ├── TopicsPanel.tsx     # obserwowane tematy
 │   │   ├── AiSummary.tsx       # karta „Wyjaśnienie AI”
+│   │   ├── ProjectList.tsx     # projekty ustaw pogrupowane według etapu
+│   │   ├── ProjectDetail.tsx   # szczegóły projektu i przebieg prac
 │   │   └── ui/                 # komponenty shadcn/ui
 │   ├── lib/
 │   │   ├── text.tsx            # daty, kategorie, wyszukiwanie, podświetlanie
 │   │   ├── topicIcon.tsx       # ikonki tematów
+│   │   ├── phases.ts           # etapy projektów (nazwy, kolejność, kolory)
 │   │   └── storage.ts          # zapis ustawień w przeglądarce
 │   ├── services/
-│   │   └── isapService.ts      # pobieranie danych z API Sejmu
+│   │   ├── isapService.ts      # pobieranie aktów z API Sejmu
+│   │   └── projectsService.ts  # pobieranie projektów ustaw z backendu
 │   └── types/
-│       └── LegalAct.ts         # typ aktu prawnego
+│       ├── LegalAct.ts         # typ aktu prawnego
+│       └── Project.ts          # typ projektu ustawy
 ├── imports/                    # logo i zrzut ekranu
 └── styles/                     # Tailwind i motyw
 public/                         # manifest PWA i ikony
 worker/
-└── zp-ai-worker.js             # backend AI (Cloudflare Worker)
+└── zp-ai-worker.js             # backend: wyjaśnienia AI i projekty ustaw (Cloudflare Worker)
 docs/                           # zrzuty ekranu do README
 ```
 
@@ -178,8 +195,9 @@ docs/                           # zrzuty ekranu do README
 Aplikacja korzysta z publicznego API Sejmu RP w standardzie ELI (European Legislation Identifier).
 
 - Zapytanie używane w aplikacji: `https://api.sejm.gov.pl/eli/acts/search?publisher=DU&pubDateFrom={data}` – akty z ostatnich 30 dni, razem z datą wejścia w życie, organem wydającym i słowami kluczowymi
+- Projekty ustaw: `https://api.sejm.gov.pl/sejm/term{kadencja}/processes` (lista i przebieg prac), a bieżąca kadencja z `https://api.sejm.gov.pl/sejm/term`
 - PDF aktu pochodzi z ISAP, np. `https://isap.sejm.gov.pl/isap.nsf/download.xsp/WDU20260001539/O/D20261539.pdf`
-- Dokumentacja: [api.sejm.gov.pl/eli_pl.html](https://api.sejm.gov.pl/eli_pl.html)
+- Dokumentacja: [api.sejm.gov.pl/eli_pl.html](https://api.sejm.gov.pl/eli_pl.html) i [api.sejm.gov.pl/sejm.html](https://api.sejm.gov.pl/sejm.html)
 - Portal ISAP: [isap.sejm.gov.pl](https://isap.sejm.gov.pl/)
 
 Przykład:
@@ -213,6 +231,22 @@ Aplikacja ──► ai.zmiennikprawny.pl/summary?eli=DU/2026/1530
 - **Każda zmiana ma przepis** – np. „(art. 2)” albo „(§ 3)”, żeby łatwo sprawdzić ją w źródle.
 - **Zastrzeżenie przy każdym podsumowaniu** – to pomoc, a nie porada prawna.
 - **Limity** – tylko akty z ostatnich 90 dni i maks. 150 nowych podsumowań dziennie; działa na darmowym planie Cloudflare, bez ryzyka kosztów.
+
+## Projekty ustaw
+
+Zakładka „Projekty” korzysta z tego samego Workera (`https://ai.zmiennikprawny.pl/projects`). AI nie jest tu używane – opis projektu pochodzi od Kancelarii Sejmu, a etapy z oficjalnego przebiegu prac.
+
+```text
+Cron co 15 min ──► Worker ──► API Sejmu: bieżąca kadencja ──► lista projektów ──► przebieg prac zmienionych
+                                │
+Aplikacja ──► /projects ◄───────┴── gotowa lista w pamięci (Workers KV), odpowiedź w ~0,1 s
+```
+
+- **Co pokazuje** – projekty, nad którymi trwają prace (ruch w ostatnich 120 dniach), oraz ustawy uchwalone, ale jeszcze nieopublikowane. Projekt znika, gdy trafi do Dziennika Ustaw – wtedy jest już na liście aktów.
+- **Etapy** – W Sejmie → W Senacie → U Prezydenta → Podpisane; osobno weto i skierowanie do Trybunału Konstytucyjnego.
+- **Kadencja ustalana automatycznie** – Worker sam sprawdza w API bieżącą kadencję Sejmu, więc po wyborach nic nie trzeba zmieniać. Przez pierwsze 120 dni nowej kadencji pokazuje też ustawy uchwalone w poprzedniej, które czekają na Senat, Prezydenta albo publikację (niedokończone projekty wygasają – zasada dyskontynuacji).
+- **Aktualność** – harmonogram (Cron Trigger) sprawdza dane co 15 minut, a pełna lista jest odświeżana co godzinę, także bez żadnych odwiedzin.
+- **Darmowy plan** – maks. 43 zapytania do API Sejmu na jedno odświeżenie (limit planu Free to 50); brakujące szczegóły dochodzą w kolejnych odświeżeniach.
 
 ## iPhone i PWA
 
