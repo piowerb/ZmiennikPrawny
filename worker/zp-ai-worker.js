@@ -4,6 +4,9 @@
  * GET /summary?eli=DU/2026/1527
  *   → { eli, czego, kogo, zmiany[], model, generated, truncated, cached }
  *
+ * GET /projects
+ *   → { updated, count, projects[] } – projekty ustaw w toku (bez AI, dane z API Sejmu)
+ *
  * Bezpieczeństwo kosztów (plan Free = brak karty = brak rachunku):
  *  - każdy akt jest streszczany tylko raz, potem odpowiedź idzie z pamięci (KV),
  *  - tylko akty z Dziennika Ustaw z ostatnich MAX_DAYS dni,
@@ -55,6 +58,7 @@ export default {
     if (url.pathname === '/' || url.pathname === '/health') {
       return json({ ok: true, service: 'ZmiennikPrawny AI', models: MODELS.map(m => m.id) }, 200, cors);
     }
+    if (url.pathname === '/projects') return handleProjects(env, ctx, cors, json);
     if (url.pathname !== '/summary') return json({ error: 'not_found' }, 404, cors);
 
     const t0 = Date.now();
@@ -183,4 +187,156 @@ function json(body, status, headers, maxAge = 0) {
       ...headers,
     },
   });
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// Projekty ustaw – „co nadchodzi” (GET /projects)
+//
+// Źródło: API Sejmu (procesy legislacyjne X kadencji). Pełna lista ma ~1 MB, a do
+// etapów potrzebny jest osobny odczyt każdego projektu, więc Worker składa gotową,
+// lekką listę i trzyma ją w KV. Odświeża ją najwyżej raz na godzinę, w tle
+// (użytkownik zawsze dostaje od razu ostatnią wersję).
+//
+// Limity planu Free: maks. 50 zapytań na wywołanie → przy jednym odświeżeniu
+// pobieramy najwyżej PROJ_DETAILS_PER_RUN szczegółów; reszta dochodzi w kolejnych
+// odświeżeniach (co PROJ_REFILL_MS, dopóki czegoś brakuje).
+// ─────────────────────────────────────────────────────────────────────────────
+
+const SEJM_PROC = 'https://api.sejm.gov.pl/sejm/term10/processes';
+const PROJ_KEY = 'projects:v1';
+const PROJ_WINDOW_DAYS = 120;        // projekty z ruchem w ostatnich 120 dniach
+const PROJ_DETAILS_PER_RUN = 40;     // + 1 zapytanie o listę = 41 < 50
+const PROJ_REFRESH_MS = 60 * 60 * 1000;
+const PROJ_REFILL_MS = 60 * 1000;           // dociąganie brakujących szczegółów co minutę
+let projRebuilding = false;          // blokada w obrębie jednej instancji
+
+export async function handleProjects(env, ctx, cors, json) {
+  const stored = await env.CACHE.get(PROJ_KEY, 'json');
+  const now = Date.now();
+
+  if (stored && now < stored.nextRefresh) return json(publicView(stored), 200, cors, 600);
+
+  if (stored) {
+    // Mamy starszą wersję: oddajemy ją od razu, odświeżamy w tle.
+    if (!projRebuilding) ctx.waitUntil(rebuildProjects(env, stored).catch(e => console.log('[zp-proj] BŁĄD', String(e))));
+    return json(publicView(stored), 200, cors, 300);
+  }
+
+  // Pierwsze uruchomienie – trzeba poczekać na zbudowanie listy.
+  try {
+    const fresh = await rebuildProjects(env, null);
+    return json(publicView(fresh), 200, cors, 300);
+  } catch (e) {
+    console.log('[zp-proj] BŁĄD', String(e));
+    return json({ error: 'projects_unavailable' }, 503, cors);
+  }
+}
+
+async function rebuildProjects(env, prev) {
+  projRebuilding = true;
+  try {
+    const t0 = Date.now();
+    const res = await fetch(`${SEJM_PROC}?documentType=projekt%20ustawy&limit=5000`, { cf: { cacheTtl: 600 } });
+    if (!res.ok) throw new Error(`lista ${res.status}`);
+    const list = await res.json();
+
+    const cands = pickCandidates(list, Date.now());
+    const prevItems = (prev && prev.items) || {};
+    const stale = cands.filter(c => !prevItems[c.number] || prevItems[c.number].changeDate !== c.changeDate);
+    const toFetch = stale.slice(0, PROJ_DETAILS_PER_RUN);
+
+    const fetched = await Promise.all(toFetch.map(c =>
+      fetch(`${SEJM_PROC}/${c.number}`).then(r => (r.ok ? r.json() : null)).catch(() => null)));
+
+    const items = {};
+    for (const c of cands) if (prevItems[c.number]) items[c.number] = prevItems[c.number];
+    for (const d of fetched) {
+      if (!d) continue;
+      const p = slimProject(d);
+      if (p) items[p.number] = p; else delete items[d.number]; // np. już opublikowany
+    }
+
+    const missing = stale.length - fetched.filter(Boolean).length;
+    const blob = {
+      v: 1,
+      updated: new Date().toISOString(),
+      nextRefresh: Date.now() + (missing > 0 ? PROJ_REFILL_MS : PROJ_REFRESH_MS),
+      items,
+    };
+    await env.CACHE.put(PROJ_KEY, JSON.stringify(blob));
+    console.log(`[zp-proj] lista ${list.length}, kandydaci ${cands.length}, pobrano ${toFetch.length}, brakuje ${missing}, ${Date.now() - t0}ms`);
+    return blob;
+  } finally {
+    projRebuilding = false;
+  }
+}
+
+/** Projekty „w drodze”: niezakończone albo uchwalone, ale jeszcze nieopublikowane. */
+export function pickCandidates(list, now) {
+  const minDate = now - PROJ_WINDOW_DAYS * 864e5;
+  return list
+    .filter(p => p && p.number && p.changeDate && new Date(p.changeDate).getTime() >= minDate)
+    .filter(p => (!p.passed && !p.closureDate) || (p.passed && !p.ELI))
+    .sort((a, b) => b.changeDate.localeCompare(a.changeDate))
+    .map(p => ({ number: String(p.number), changeDate: p.changeDate }));
+}
+
+/** Etap projektu w prostych kategoriach. */
+export function phaseOf(stages) {
+  const real = (stages || []).filter(s => s.stageType !== 'End');
+  const types = real.map(s => s.stageType);
+  const at = t => types.lastIndexOf(t);
+  if (at('PresidentToTribunal') >= 0 && at('PresidentToTribunal') > at('PresidentSignature')) return 'tribunal';
+  if (at('PresidentSignature') > at('Veto')) return 'signed';
+  if (at('Veto') >= 0) return 'veto';
+  if (at('ToPresident') >= 0) return 'president';
+  if (real.some(s => /uchwalono/i.test(s.decision || ''))) return 'senate';
+  return 'sejm';
+}
+
+const AUTHOR = /^(Rządowy|Poselski|Senacki|Obywatelski|Prezydencki|Komisyjny)\s+projekt\s+ustawy\s*/i;
+const AUTHOR_PRESIDENT = /^Przedstawiony przez Prezydenta Rzeczypospolitej Polskiej projekt ustawy\s*/i;
+
+export function slimProject(d) {
+  if (!d || !d.number || d.ELI) return null; // opublikowany → jest już na liście aktów
+  if (d.closureDate && !d.passed) return null; // odrzucony / wycofany
+  const stages = (d.stages || [])
+    .filter(s => s.stageType !== 'End' && s.stageName)
+    .map(s => ({
+      name: String(s.stageName).trim(),
+      date: s.date || null,
+      decision: s.decision ? String(s.decision).trim() : null,
+    }));
+  const dated = stages.filter(s => s.date);
+  const last = dated[dated.length - 1] || stages[stages.length - 1] || null;
+  const title = String(d.title || '').replace(/\s+/g, ' ').trim();
+  const am = title.match(AUTHOR);
+  const pm = !am && title.match(AUTHOR_PRESIDENT);
+  const cut = am ? am[0].length : pm ? pm[0].length : 0;
+  return {
+    number: String(d.number),
+    title: cut ? `Projekt ustawy ${title.slice(cut)}` : title,
+    author: am ? am[1][0].toUpperCase() + am[1].slice(1).toLowerCase() : pm ? 'Prezydencki' : null,
+    description: d.description ? String(d.description).trim().slice(0, 1500) : null,
+    phase: phaseOf(d.stages),
+    lastStage: last ? last.name : null,
+    lastDate: last ? last.date : (d.processStartDate || null),
+    started: d.processStartDate || null,
+    changeDate: d.changeDate,
+    urgent: d.urgencyStatus === 'URGENT',
+    eu: !!d.UE && d.UE !== 'NO',
+    rcl: d.rclLink || null,
+    stages,
+  };
+}
+
+// Najbliżej wejścia w życie na górze; zatrzymane (weto, TK) na końcu.
+const PHASE_ORDER = { signed: 0, president: 1, senate: 2, sejm: 3, veto: 4, tribunal: 5 };
+
+function publicView(blob) {
+  const projects = Object.values(blob.items || {}).sort((a, b) =>
+    (PHASE_ORDER[a.phase] - PHASE_ORDER[b.phase]) ||
+    String(b.lastDate || '').localeCompare(String(a.lastDate || '')) ||
+    (+b.number - +a.number));
+  return { updated: blob.updated, count: projects.length, projects };
 }

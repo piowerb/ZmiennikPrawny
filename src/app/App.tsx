@@ -8,11 +8,17 @@ import { TopicsPanel } from './components/TopicsPanel';
 import { daysFromToday, matches } from './lib/text';
 import { load, save } from './lib/storage';
 import { TopicIcon } from './lib/topicIcon';
+import { Project, ProjectPhase } from './types/Project';
+import { fetchProjects } from './services/projectsService';
+import { ProjectList } from './components/ProjectList';
+import { ProjectDetail } from './components/ProjectDetail';
+import { PHASE_META, PHASE_ORDER, matchesProject } from './lib/phases';
 
 // @ts-ignore
 import logo from '../imports/logo_zmiennikprawny_96.png';
 
-type Tab = 'latest' | 'soon' | 'watch';
+type Tab = 'latest' | 'soon' | 'watch' | 'projects';
+type LoadState = 'idle' | 'loading' | 'error' | 'done';
 type Refine = { kind: 'tag' | 'body'; value: string } | null;
 
 const FILTERS: { id: 'all' | LegalActCategory; label: string }[] = [
@@ -23,6 +29,7 @@ const FILTERS: { id: 'all' | LegalActCategory; label: string }[] = [
 ];
 const SOON_DAYS = 14;
 const ELI_HASH = /^#\/(DU\/\d{4}\/\d+)$/;
+const PROJ_HASH = /^#\/projekt\/(\d+)$/;
 
 export default function App() {
   const [acts, setActs] = useState<LegalAct[]>([]);
@@ -33,6 +40,11 @@ export default function App() {
   const [tab, setTab] = useState<Tab>('latest');
   const [refine, setRefine] = useState<Refine>(null);
   const [selected, setSelected] = useState<LegalAct | null>(null);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [projState, setProjState] = useState<LoadState>('idle');
+  const [projUpdated, setProjUpdated] = useState<string | null>(null);
+  const [phase, setPhase] = useState<'all' | ProjectPhase>('all');
+  const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [topics, setTopics] = useState<string[]>(() => load('zp:topics', [] as string[]));
   const [dark, setDark] = useState<boolean>(() =>
     load('zp:theme', typeof matchMedia !== 'undefined' && matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light') === 'dark',
@@ -62,9 +74,33 @@ export default function App() {
   };
   useEffect(() => { loadData(); }, []);
 
+  // Projekty ustaw – pobierane dopiero przy pierwszym otwarciu zakładki
+  const loadProjects = async () => {
+    setProjState('loading');
+    try {
+      const data = await fetchProjects();
+      setProjects(data.projects);
+      setProjUpdated(data.updated);
+      setProjState('done');
+    } catch (e) {
+      console.error(e);
+      setProjState('error');
+    }
+  };
+  useEffect(() => { if (tab === 'projects' && projState === 'idle') loadProjects(); }, [tab, projState]);
+
   // Linki do aktów (#/DU/2026/1539) i przycisk „wstecz” w przeglądarce
   useEffect(() => {
     const sync = async () => {
+      const pm = window.location.hash.match(PROJ_HASH);
+      if (pm) {
+        setSelected(null);
+        setTab('projects');
+        setSelectedProject(projects.find(p => p.number === pm[1]) ?? null);
+        mainRef.current?.scrollTo(0, 0);
+        return;
+      }
+      setSelectedProject(null);
       const m = window.location.hash.match(ELI_HASH);
       if (!m) {
         setSelected(null);
@@ -81,12 +117,17 @@ export default function App() {
     sync();
     window.addEventListener('hashchange', sync);
     return () => window.removeEventListener('hashchange', sync);
-  }, [acts, loading]);
+  }, [acts, loading, projects]);
 
   const openAct = (a: LegalAct) => {
     listScroll.current = mainRef.current?.scrollTop ?? 0;
     openedFromList.current = true;
     window.location.hash = `/${a.id}`;
+  };
+  const openProject = (p: Project) => {
+    listScroll.current = mainRef.current?.scrollTop ?? 0;
+    openedFromList.current = true;
+    window.location.hash = `/projekt/${p.number}`;
   };
   const closeAct = () => {
     if (openedFromList.current) { openedFromList.current = false; window.history.back(); }
@@ -119,10 +160,20 @@ export default function App() {
   const watchedNew = useMemo(() => acts.filter(a => topics.some(t => matches(a, t)) &&
     (lastVisit.current ? new Date(a.publicationDate).getTime() > lastVisit.current - 86400000 : a.isNew)).length, [acts, topics]);
 
+  const projSearched = useMemo(() => projects.filter(p => matchesProject(p, search)), [projects, search]);
+  const projShown = useMemo(() => projSearched.filter(p => phase === 'all' || p.phase === phase), [projSearched, phase]);
+  const phaseFilters = [
+    { id: 'all' as const, label: 'Wszystkie' },
+    ...PHASE_ORDER.filter(ph => projects.some(p => p.phase === ph)).map(ph => ({ id: ph, label: PHASE_META[ph].filter })),
+  ];
+  const isDetail = !!(selected || selectedProject);
+  const busy = tab === 'projects' ? projState === 'loading' : loading;
+
   const tabs: { id: Tab; label: string; count?: number; dot?: boolean }[] = [
     { id: 'latest', label: 'Najnowsze', count: base.length },
     { id: 'soon', label: 'Wkrótce', count: soon.length },
     { id: 'watch', label: 'Obserwowane', count: topics.length ? watched.length : undefined, dot: watchedNew > 0 },
+    { id: 'projects', label: 'Projekty', count: projState === 'done' ? projShown.length : undefined },
   ];
 
   const pill = (active: boolean) => `px-4 min-h-[40px] rounded-full text-sm whitespace-nowrap transition-colors ${
@@ -133,23 +184,23 @@ export default function App() {
       <header className="border-b border-gray-200 dark:border-[#26302b] safe-area-top">
         <div className="max-w-3xl mx-auto w-full flex items-center justify-between gap-2 px-4 pb-3">
           <div className="flex items-center gap-3 min-w-0">
-            {selected && (
+            {isDetail && (
               <button onClick={closeAct} className="flex items-center gap-1.5 min-h-[44px] pr-3 mr-1 border-r border-gray-200 dark:border-[#26302b] text-[#005130] dark:text-[#6fd3a2] font-medium">
                 <ArrowLeftIcon className="w-5 h-5" /> Wstecz
               </button>
             )}
             <a href="https://zmiennikprawny.pl" className="flex items-center gap-3 min-w-0 rounded-xl" aria-label="ZmiennikPrawny – strona projektu" title="Strona projektu zmiennikprawny.pl">
               <img src={logo} alt="" className="w-10 h-10 rounded-xl shadow-sm flex-shrink-0" />
-              <span className={`font-bold text-xl tracking-tight truncate ${selected ? 'hidden sm:inline' : ''}`}>ZmiennikPrawny</span>
+              <span className={`font-bold text-xl tracking-tight truncate ${isDetail ? 'hidden sm:inline' : ''}`}>ZmiennikPrawny</span>
             </a>
           </div>
           <div className="flex items-center gap-1">
             <button onClick={toggleDark} aria-label={dark ? 'Włącz jasny motyw' : 'Włącz ciemny motyw'} className="w-11 h-11 grid place-items-center rounded-full text-gray-600 hover:bg-gray-100 dark:text-[#9aa59f] dark:hover:bg-[#1a221e]">
               {dark ? <SunIcon className="w-5 h-5" /> : <MoonIcon className="w-5 h-5" />}
             </button>
-            {!selected && (
-              <button onClick={loadData} disabled={loading} aria-label="Odśwież" className="w-11 h-11 grid place-items-center rounded-full text-gray-600 hover:bg-gray-100 dark:text-[#9aa59f] dark:hover:bg-[#1a221e]">
-                <RefreshCwIcon className={`w-5 h-5 ${loading ? 'animate-spin' : ''}`} />
+            {!isDetail && (
+              <button onClick={tab === 'projects' ? loadProjects : loadData} disabled={busy} aria-label="Odśwież" className="w-11 h-11 grid place-items-center rounded-full text-gray-600 hover:bg-gray-100 dark:text-[#9aa59f] dark:hover:bg-[#1a221e]">
+                <RefreshCwIcon className={`w-5 h-5 ${busy ? 'animate-spin' : ''}`} />
               </button>
             )}
           </div>
@@ -160,6 +211,8 @@ export default function App() {
         <div className="max-w-3xl mx-auto w-full">
           {selected ? (
             <ActDetail act={selected} search={search} onTag={t => applyRefine('tag', t)} onBody={b => applyRefine('body', b)} />
+          ) : selectedProject ? (
+            <ProjectDetail project={selectedProject} search={search} />
           ) : (
             <>
               <div className="p-4 space-y-3">
@@ -167,27 +220,31 @@ export default function App() {
                   <SearchIcon className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
                   <input
                     type="search"
-                    placeholder="Szukaj aktów, organów, tematów…"
+                    placeholder={tab === 'projects' ? 'Szukaj projektów, numerów druków…' : 'Szukaj aktów, organów, tematów…'}
                     value={search}
                     onChange={e => setSearch(e.target.value)}
                     className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 bg-white placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-[#005130] dark:bg-[#121916] dark:border-[#26302b] dark:focus:ring-[#6fd3a2]"
                   />
                 </div>
-                <div role="tablist" className="grid grid-cols-3 gap-1 p-1 rounded-xl bg-gray-100 dark:bg-[#151d19]">
+                <div role="tablist" className="flex gap-1 p-1 rounded-xl bg-gray-100 dark:bg-[#151d19]">
                   {tabs.map(t => (
                     <button key={t.id} role="tab" aria-selected={tab === t.id} onClick={() => setTab(t.id)}
-                      className={`relative min-h-[40px] px-2 rounded-lg text-sm font-medium transition-colors ${tab === t.id ? 'bg-white shadow-sm text-[#005130] dark:bg-[#0e1311] dark:text-[#6fd3a2]' : 'text-gray-600 dark:text-[#9aa59f]'}`}>
-                      {t.label}{t.count !== undefined && <span className="ml-1 opacity-60">{t.count}</span>}
+                      className={`relative flex-auto min-h-[40px] px-2 rounded-lg text-[13px] sm:text-sm font-medium whitespace-nowrap transition-colors ${tab === t.id ? 'bg-white shadow-sm text-[#005130] dark:bg-[#0e1311] dark:text-[#6fd3a2]' : 'text-gray-600 dark:text-[#9aa59f]'}`}>
+                      {t.label}{t.count !== undefined && <span className="ml-1 opacity-60 hidden sm:inline">{t.count}</span>}
                       {t.dot && <span className="absolute top-1.5 right-2 w-2 h-2 rounded-full bg-red-500" aria-label="nowe akty" />}
                     </button>
                   ))}
                 </div>
                 <div className="flex gap-2 overflow-x-auto scrollbar-hide -mx-4 px-4">
-                  {FILTERS.map(f => (
-                    <button key={f.id} onClick={() => setFilter(f.id)} className={pill(filter === f.id)}>{f.label}</button>
-                  ))}
+                  {tab === 'projects'
+                    ? phaseFilters.map(f => (
+                      <button key={f.id} onClick={() => setPhase(f.id)} className={pill(phase === f.id)}>{f.label}</button>
+                    ))
+                    : FILTERS.map(f => (
+                      <button key={f.id} onClick={() => setFilter(f.id)} className={pill(filter === f.id)}>{f.label}</button>
+                    ))}
                 </div>
-                {refine && (
+                {refine && tab !== 'projects' && (
                   <div className="flex items-center gap-2 text-sm">
                     <span className="text-gray-500 dark:text-[#9aa59f]">{refine.kind === 'tag' ? 'Temat:' : 'Organ:'}</span>
                     <span className="inline-flex items-center gap-1.5 pl-3 pr-1 min-h-[36px] rounded-full bg-[#e6f4ed] text-[#005130] dark:bg-[#143323] dark:text-[#6fd3a2]">
@@ -204,7 +261,24 @@ export default function App() {
                   onAdd={t => updateTopics([...topics, t])} onRemove={t => updateTopics(topics.filter(x => x !== t))} />
               )}
 
-              {loading ? <ListSkeleton /> : error ? (
+              {tab === 'projects' ? (
+                <>
+                  <p className="px-4 pb-3 text-xs text-gray-500 dark:text-[#9aa59f]">
+                    Projekty ustaw, nad którymi trwają prace (ruch w ostatnich 120 dniach). Dane: API Sejmu RP
+                    {projUpdated ? `, aktualizacja ${new Date(projUpdated).toLocaleString('pl-PL', { day: 'numeric', month: 'numeric', hour: '2-digit', minute: '2-digit' })}` : ''}.
+                  </p>
+                  {projState === 'error' ? (
+                    <div className="p-8 text-center">
+                      <p className="font-medium text-red-600 dark:text-red-400">Nie udało się pobrać projektów ustaw</p>
+                      <p className="text-sm mt-1 text-gray-500 dark:text-[#9aa59f]">Sprawdź połączenie z internetem i spróbuj ponownie.</p>
+                      <button onClick={loadProjects} className="mt-4 px-4 min-h-[44px] rounded-xl text-sm text-white bg-[#005130] dark:bg-[#1f7a52]">Spróbuj ponownie</button>
+                    </div>
+                  ) : projState !== 'done' ? <ListSkeleton /> : (
+                    <ProjectList projects={projShown} search={search} onOpen={openProject}
+                      empty={{ title: 'Brak pasujących projektów', text: 'Spróbuj zmienić etap lub wyszukiwaną frazę.' }} />
+                  )}
+                </>
+              ) : loading ? <ListSkeleton /> : error ? (
                 <div className="p-8 text-center">
                   <p className="font-medium text-red-600 dark:text-red-400">Błąd pobierania danych</p>
                   <p className="text-sm mt-1 text-gray-500 dark:text-[#9aa59f]">Sprawdź połączenie z internetem i spróbuj ponownie.</p>
@@ -226,8 +300,8 @@ export default function App() {
           )}
 
           <footer className="px-4 pt-8 pb-[calc(2.5rem+env(safe-area-inset-bottom))] text-xs text-center text-gray-500 dark:text-[#7f8a84] space-y-2">
-            <p>Dane: oficjalne API Sejmu RP (ELI). ZmiennikPrawny nie jest serwisem Sejmu RP, a informacje mają charakter pomocniczy i nie stanowią porady prawnej. Wiążący jest wyłącznie tekst opublikowany w Dzienniku Ustaw.</p>
-            <p>Bez kont i ciasteczek. Motyw i obserwowane tematy zapisują się tylko w Twojej przeglądarce. Wyjaśnienia AI tworzy Cloudflare Workers AI wyłącznie na podstawie publicznego tekstu aktu – nie wysyłamy żadnych Twoich danych.</p>
+            <p>Dane: oficjalne API Sejmu RP (akty – ELI, projekty ustaw – proces legislacyjny). ZmiennikPrawny nie jest serwisem Sejmu RP, a informacje mają charakter pomocniczy i nie stanowią porady prawnej. Wiążący jest wyłącznie tekst opublikowany w Dzienniku Ustaw.</p>
+            <p>Bez kont i ciasteczek. Liczymy tylko anonimowe statystyki odwiedzin (Cloudflare Web Analytics, bez ciasteczek). Motyw i obserwowane tematy zapisują się tylko w Twojej przeglądarce. Wyjaśnienia AI tworzy Cloudflare Workers AI wyłącznie na podstawie publicznego tekstu aktu – nie wysyłamy żadnych Twoich danych.</p>
             <a href="https://github.com/piowerb" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 min-h-[36px] px-3 rounded-full border border-gray-200 dark:border-[#26302b] hover:text-gray-900 dark:hover:text-[#e8ece9]">
               <GithubIcon className="w-3.5 h-3.5" /> Autor: Piotr Werbowy
             </a>

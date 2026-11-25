@@ -75,14 +75,14 @@ function ActRow({ act: a, search, groupBy, onOpen }: { act: LegalAct; search: st
         <h3 className="font-semibold mt-1.5 leading-snug line-clamp-3 text-gray-900 dark:text-[#e8ece9]">
           <Highlight text={a.title} query={search} />
         </h3>
-        <p className="text-sm text-gray-500 dark:text-[#9aa59f] mt-1.5 flex items-center gap-x-2 gap-y-0.5 flex-wrap">
+        <p className="text-sm text-gray-500 dark:text-[#9aa59f] mt-1.5">
           <span className="font-medium text-gray-700 dark:text-[#c9d1cc]">{a.journalNumber}</span>
-          <span aria-hidden className="inline-block w-1 h-1 rounded-full bg-gray-300 dark:bg-[#3a4640]" />
-          <span>{fmt(a.publicationDate)}, {publishedLabel(a.publicationDate)}</span>
+          <span aria-hidden className="inline-block w-1 h-1 mx-2 align-middle rounded-full bg-gray-300 dark:bg-[#3a4640]" />
+          <span className="whitespace-nowrap">{fmt(a.publicationDate)}, {publishedLabel(a.publicationDate)}</span>
           {a.effectiveDate && groupBy === 'published' && (
             <>
-              <span aria-hidden className="inline-block w-1 h-1 rounded-full bg-gray-300 dark:bg-[#3a4640]" />
-              <span>{effectiveLabel(a.effectiveDate)}</span>
+              <span aria-hidden className="inline-block w-1 h-1 mx-2 align-middle rounded-full bg-gray-300 dark:bg-[#3a4640]" />
+              <span className="whitespace-nowrap">{effectiveLabel(a.effectiveDate)}</span>
             </>
           )}
         </p>
