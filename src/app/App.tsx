@@ -229,7 +229,7 @@ export default function App() {
             <p>Dane: oficjalne API Sejmu RP (ELI). ZmiennikPrawny nie jest serwisem Sejmu RP, a informacje mają charakter pomocniczy i nie stanowią porady prawnej. Wiążący jest wyłącznie tekst opublikowany w Dzienniku Ustaw.</p>
             <p>Bez kont i ciasteczek. Motyw i obserwowane tematy zapisują się tylko w Twojej przeglądarce.</p>
             <a href="https://github.com/piowerb" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 min-h-[36px] px-3 rounded-full border border-gray-200 dark:border-[#26302b] hover:text-gray-900 dark:hover:text-[#e8ece9]">
-              <GithubIcon className="w-3.5 h-3.5" /> Autor: @piowerb
+              <GithubIcon className="w-3.5 h-3.5" /> Autor: Piotr Werbowy
             </a>
           </footer>
         </div>

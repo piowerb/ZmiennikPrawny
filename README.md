@@ -35,12 +35,13 @@
 
 ---
 
-**ZmiennikPrawny** – polska aplikacja internetowa z kategorii LegalTech, służąca do śledzenia nowych aktów prawnych ogłaszanych w Dzienniku Ustaw Rzeczypospolitej Polskiej. Pokazuje ustawy, rozporządzenia i obwieszczenia w formie przejrzystej listy, razem z datą wejścia w życie, organem wydającym i tematami. Działa w przeglądarce i jako aplikacja progresywna (PWA) na telefonie. Korzysta z publicznego API Sejmu RP. Projekt jest rozwijany od 2025 roku przez [@piowerb](https://github.com/piowerb).
+**ZmiennikPrawny** – polska aplikacja internetowa z kategorii LegalTech, służąca do śledzenia nowych aktów prawnych ogłaszanych w Dzienniku Ustaw Rzeczypospolitej Polskiej. Pokazuje ustawy, rozporządzenia i obwieszczenia w formie przejrzystej listy, razem z datą wejścia w życie, organem wydającym i tematami. Działa w przeglądarce i jako aplikacja progresywna (PWA) na telefonie. Korzysta z publicznego API Sejmu RP. Projekt jest rozwijany od 2025 roku przez Piotra Werbowego ([@piowerb](https://github.com/piowerb)).
 
 | | |
 |---|---|
 | **Typ** | aplikacja internetowa (PWA), LegalTech |
-| **Autor** | [@piowerb](https://github.com/piowerb) |
+| **Autor** | Piotr Werbowy ([@piowerb](https://github.com/piowerb)) |
+| **Kontakt** | [kontakt@zmiennikprawny.pl](mailto:kontakt@zmiennikprawny.pl) |
 | **Początek prac** | wrzesień 2025 |
 | **Pierwsze publiczne wydanie** | listopad 2025 (Beta) |
 | **Aktualna wersja** | v1.2 (listopad 2026) |
@@ -178,7 +179,7 @@ Kod źródłowy, projekt interfejsu i architektura aplikacji ZmiennikPrawny są 
 - Możesz przeglądać ten kod wyłącznie w celach edukacyjnych i poglądowych.
 - **Zabronione jest** kopiowanie, modyfikowanie, rozpowszechnianie i wykorzystywanie tego kodu (w całości lub we fragmentach) we własnych projektach, komercyjnych i niekomercyjnych, bez mojej wcześniejszej, wyraźnej zgody.
 
-Jeśli chcesz użyć tego projektu, rozwinąć go albo wdrożyć u siebie, najpierw się ze mną skontaktuj. Błędy i pomysły możesz zgłaszać w zakładce [Issues](https://github.com/piowerb/ZmiennikPrawny/issues).
+Jeśli chcesz użyć tego projektu, rozwinąć go albo wdrożyć u siebie, najpierw się ze mną skontaktuj: [kontakt@zmiennikprawny.pl](mailto:kontakt@zmiennikprawny.pl). Błędy i pomysły możesz zgłaszać w zakładce [Issues](https://github.com/piowerb/ZmiennikPrawny/issues).
 
 ### Licencje komponentów zewnętrznych
 
@@ -187,7 +188,7 @@ Prawa zastrzeżone dotyczą mojego kodu i projektu aplikacji. Projekt korzysta t
 ---
 
 <p align="center">
-  Autor: <a href="https://github.com/piowerb">@piowerb</a> · <b>ZmiennikPrawny – bądź na bieżąco z prawem</b> ⚖️
+  Autor: Piotr Werbowy (<a href="https://github.com/piowerb">@piowerb</a>) · <b>ZmiennikPrawny – bądź na bieżąco z prawem</b> ⚖️
   <br />
   <a href="#spis-treści">↑ Wróć na górę</a>
 </p>
