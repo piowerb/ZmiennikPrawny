@@ -23,23 +23,11 @@
     <a href="https://zmiennikprawny.pl"><img alt="Strona projektu" src="https://img.shields.io/badge/zmiennikprawny.pl-ffffff?style=for-the-badge&labelColor=ffffff&color=e6f4ed" /></a>
   </p>
 
-  <img src="src/imports/screenshot.png" width="720" alt="ZmiennikPrawny na komputerze – lista najnowszych aktów" />
-
-  <br /><br />
-
-  <img src="docs/screenshot-mobile-list.png" width="180" alt="ZmiennikPrawny na telefonie – lista aktów" />
+  <img src="docs/screenshot-mobile-list.png" width="230" alt="ZmiennikPrawny na telefonie – lista nowych aktów" />
   &nbsp;
-  <img src="docs/screenshot-mobile-detail.png" width="180" alt="ZmiennikPrawny na telefonie – szczegóły aktu" />
+  <img src="docs/screenshot-mobile-ai.png" width="230" alt="ZmiennikPrawny na telefonie – wyjaśnienie aktu przez AI" />
   &nbsp;
-  <img src="docs/screenshot-mobile-ai.png" width="180" alt="ZmiennikPrawny na telefonie – wyjaśnienie AI" />
-  &nbsp;
-  <img src="docs/screenshot-mobile-dark.png" width="180" alt="ZmiennikPrawny na telefonie – tryb ciemny" />
-
-  <br /><br />
-
-  <img src="docs/screenshot-mobile-projects.png" width="180" alt="ZmiennikPrawny na telefonie – projekty ustaw" />
-  &nbsp;
-  <img src="docs/screenshot-mobile-project-detail.png" width="180" alt="ZmiennikPrawny na telefonie – szczegóły projektu ustawy" />
+  <img src="docs/screenshot-mobile-projects.png" width="230" alt="ZmiennikPrawny na telefonie – projekty ustaw" />
 </div>
 
 ---
