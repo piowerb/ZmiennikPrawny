@@ -20,8 +20,8 @@ type State =
   | { kind: 'error'; message: string };
 
 const ERRORS: Record<string, string> = {
-  limit: 'Darmowy dzienny limit podsumowań AI się wyczerpał. Spróbuj jutro albo zapytaj ChatGPT lub Claude poniżej.',
-  ai_unavailable: 'Podsumowania AI są chwilowo niedostępne. Spróbuj później albo zapytaj ChatGPT lub Claude poniżej.',
+  limit: 'Darmowy dzienny limit podsumowań AI się wyczerpał. Spróbuj jutro albo zapytaj ChatGPT lub Google AI poniżej.',
+  ai_unavailable: 'Podsumowania AI są chwilowo niedostępne. Spróbuj później albo zapytaj ChatGPT lub Google AI poniżej.',
   too_old: 'Podsumowania AI są dostępne dla aktów z ostatnich 90 dni.',
   no_text: 'Tekst tego aktu nie jest jeszcze dostępny w ISAP. Spróbuj za kilka godzin.',
   bad_output: 'Nie udało się przygotować podsumowania tego aktu. Spróbuj ponownie później.',
@@ -125,11 +125,11 @@ export function AiSummary({ act }: { act: LegalAct }) {
           <a href={`https://chatgpt.com/?q=${q}`} target="_blank" rel="noopener noreferrer" className={askBtn}>
             Zapytaj ChatGPT <ExternalLinkIcon className="w-4 h-4" aria-hidden />
           </a>
-          <a href={`https://claude.ai/new?q=${q}`} target="_blank" rel="noopener noreferrer" className={askBtn}>
-            Zapytaj Claude <ExternalLinkIcon className="w-4 h-4" aria-hidden />
+          <a href={`https://www.google.com/search?udm=50&q=${q}`} target="_blank" rel="noopener noreferrer" className={askBtn}>
+            Zapytaj Google AI <ExternalLinkIcon className="w-4 h-4" aria-hidden />
           </a>
         </div>
-        <p className="text-xs text-gray-500 dark:text-[#7f8a84]">Otworzy się nowa karta z gotowym pytaniem. Rozmowa odbywa się na Twoim koncie w wybranej usłudze.</p>
+        <p className="text-xs text-gray-500 dark:text-[#7f8a84]">Otworzy się nowa karta z gotowym pytaniem. Google AI (tryb AI w wyszukiwarce, oparty na Gemini) odpowiada od razu, także bez logowania.</p>
       </div>
     </section>
   );

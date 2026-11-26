@@ -103,11 +103,11 @@ export function ProjectDetail({ project: p, search }: { project: Project; search
           <a href={`https://chatgpt.com/?q=${q}`} target="_blank" rel="noopener noreferrer" className={`${secondaryBtn} bg-white dark:bg-transparent`}>
             Zapytaj ChatGPT <ExternalLinkIcon className="w-4 h-4" aria-hidden />
           </a>
-          <a href={`https://claude.ai/new?q=${q}`} target="_blank" rel="noopener noreferrer" className={`${secondaryBtn} bg-white dark:bg-transparent`}>
-            Zapytaj Claude <ExternalLinkIcon className="w-4 h-4" aria-hidden />
+          <a href={`https://www.google.com/search?udm=50&q=${q}`} target="_blank" rel="noopener noreferrer" className={`${secondaryBtn} bg-white dark:bg-transparent`}>
+            Zapytaj Google AI <ExternalLinkIcon className="w-4 h-4" aria-hidden />
           </a>
         </div>
-        <p className="text-xs text-gray-500 dark:text-[#7f8a84]">Otworzy się nowa karta z gotowym pytaniem. Rozmowa odbywa się na Twoim koncie w wybranej usłudze.</p>
+        <p className="text-xs text-gray-500 dark:text-[#7f8a84]">Otworzy się nowa karta z gotowym pytaniem. Google AI (tryb AI w wyszukiwarce, oparty na Gemini) odpowiada od razu, także bez logowania.</p>
       </div>
     </article>
   );

@@ -102,7 +102,7 @@ Przy każdym uruchomieniu aplikacja pobiera z API Sejmu RP akty opublikowane w D
 | listopad 2025 | Beta | Pierwsza publiczna wersja, pierwsze opinie użytkowników |
 | maj 2026 | v1.0 | Pierwsza wersja stabilna: dopracowany interfejs i UX |
 | październik 2026 | v1.2 | Aktualizacja: zakładki „Wkrótce” i „Obserwowane”, grupowanie po dniach, linki do aktów, klikalne tematy i organy, ikonki tematów, tryb ciemny, data wejścia w życie i organ wydający z ISAP, naprawa wyszukiwarki, pełne PWA, ok. 4× mniej pobieranych danych |
-| listopad 2026 | v1.3 | Wyjaśnienia AI (beta) z odnośnikami do przepisów i przyciskami „Zapytaj ChatGPT / Claude”, zakładka „Projekty” z projektami ustaw w Sejmie, Senacie i u Prezydenta, własny backend na Cloudflare Workers, domena app.zmiennikprawny.pl, anonimowe statystyki i poprawki dostępności |
+| listopad 2026 | v1.3 | Wyjaśnienia AI (beta) z odnośnikami do przepisów i przyciskami „Zapytaj ChatGPT / Google AI”, zakładka „Projekty” z projektami ustaw w Sejmie, Senacie i u Prezydenta, własny backend na Cloudflare Workers, domena app.zmiennikprawny.pl, anonimowe statystyki i poprawki dostępności |
 
 ## Funkcje
 
@@ -115,7 +115,7 @@ Przy każdym uruchomieniu aplikacja pobiera z API Sejmu RP akty opublikowane w D
 - **Wyjaśnienia AI (beta)** – w szczegółach aktu jedno kliknięcie daje streszczenie prostym językiem: czego dotyczy, kogo dotyczy i najważniejsze zmiany, każda z przepisem; daty zawsze z ISAP, nie z AI
 - **Projekty ustaw** – co dopiero nadchodzi: projekty pogrupowane według etapu (podpisane, u Prezydenta, w Senacie, w Sejmie, weto, Trybunał Konstytucyjny), z oznaczeniem wnioskodawcy, trybu pilnego i wdrażania prawa UE
 - **Szczegóły projektu** – opis Kancelarii Sejmu, pełny przebieg prac z datami i decyzjami, linki do sejm.gov.pl i do prac rządu w RCL, własny adres (np. `/#/projekt/10/3400`)
-- **Pytania do aktu** – przyciski „Zapytaj ChatGPT” i „Zapytaj Claude” otwierają rozmowę z gotowym pytaniem o konkretny akt
+- **Pytania do aktu i projektu** – przyciski „Zapytaj ChatGPT” i „Zapytaj Google AI” (tryb AI w wyszukiwarce Google, oparty na Gemini) otwierają rozmowę z gotowym pytaniem o konkretny akt albo projekt
 - **Szczegóły aktu** – sygnatura, data publikacji i wejścia w życie, organ, tematy, link do PDF i do strony w ISAP, kopiowanie sygnatury i linku
 - **Linki do aktów** – każdy akt ma własny adres (np. `/#/DU/2026/1539`), działa przycisk „wstecz”
 - **Tryb ciemny** – automatycznie według systemu albo ręcznie
